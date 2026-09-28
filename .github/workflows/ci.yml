@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install
+        run: uv sync --extra dev --python ${{ matrix.python-version }}
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Test
+        # The Gurobi smoke test is skipped when no license is available (pip gurobipy has a
+        # size-limited license that is enough for the toy instance).
+        run: uv run pytest
+      - name: Portability check (no absolute paths, data size guard)
+        run: uv run python scripts/package_submission.py --check
+
+  # Data files are committed only if small; see CONTRIBUTING.md.

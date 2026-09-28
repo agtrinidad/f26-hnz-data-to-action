@@ -1,0 +1,42 @@
+# Single source of truth for model parameters. Edit here, not in code.
+# Values marked ASSUMPTION are placeholders until the PA DOH contract terms are known
+# (see docs/assumptions.md).
+
+solver: gurobi            # gurobi | appsi_highs (needs the `fallback` extra)
+seed: 867                 # RNG seed for Thompson sampling / simulation
+
+geography:
+  city: Pittsburgh
+  state: PA
+  tract_level: true       # census tracts, not ZIP codes (mitigates MAUP; Lee et al. 2018)
+
+capacity:                 # ASSUMPTION
+  teams: 2
+  hours_per_day: 8
+  weekdays_only: true
+  horizon_weeks: 1
+  weekly_mileage_cap: 300
+  budget_inspections: 200 # contract/budget cap B on total inspections in the horizon
+  service_minutes: 20     # time on site per inspection s_i (uniform until measured)
+
+prize:                    # r[i,d] = h_i * p_i + lambda * delta_deterrence_i(state_i)
+  lambda_deterrence: 0.25
+  h_weights:
+    school_proximity: 0.4
+    youth_density: 0.3
+    historical_severity: 0.3
+  school_buffer_m: 300
+
+coverage:
+  random_share: 0.20      # share of inspections reserved for baseline random sampling (m_S floor)
+  min_per_tract: 1        # equity floor per tract with at least one retailer
+
+harrington:               # ASSUMPTION: escalation states
+  states: [low, high]
+  escalate_after_violation: true
+
+paths:                    # always relative to the repository root
+  raw: data/raw
+  interim: data/interim
+  processed: data/processed
+  outputs: outputs

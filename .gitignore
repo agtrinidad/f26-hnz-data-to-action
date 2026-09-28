@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data: only large raw downloads are ignored; small interim/processed files are committed
+data/raw/*
+!data/raw/.gitkeep
+data/cache/
+*.graphml
+*.gpkg-wal
+
+# Secrets / licenses
+.env
+*.lic
+gurobi.lic
+
+# Submission artifacts
+submission/
+*.zip
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.obsidian/
