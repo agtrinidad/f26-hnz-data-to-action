@@ -7,6 +7,8 @@ speed) keeps tests offline and is used when the network download fails. Times ar
 
 from __future__ import annotations
 
+import hashlib
+
 import numpy as np
 import pandas as pd
 
@@ -60,10 +62,10 @@ def travel_time_matrix(
     Cached at data/interim/travel_time_matrix.csv.gz keyed by the point list. Returns
     (matrix, source) where source is "osm" or "haversine".
     """
-    cache = config.path("interim") / "travel_time_matrix.csv.gz"
     sig = "|".join(f"{x:.5f},{y:.5f}" for x, y in zip(points["lon"], points["lat"], strict=True))
-    sig_path = cache.with_suffix(".sig")
-    if cache.exists() and sig_path.exists() and sig_path.read_text() == sig and not refresh:
+    digest = hashlib.md5(sig.encode()).hexdigest()[:10]
+    cache = config.path("interim") / f"travel_time_matrix_{digest}.csv.gz"
+    if cache.exists() and not refresh:
         return pd.read_csv(cache, header=None).to_numpy(), "osm"
     lons, lats = points["lon"].to_numpy(), points["lat"].to_numpy()
     source, mat = "haversine", haversine_minutes(lons, lats)
@@ -87,5 +89,4 @@ def travel_time_matrix(
     if source == "osm":
         cache.parent.mkdir(parents=True, exist_ok=True)
         pd.DataFrame(mat).to_csv(cache, header=False, index=False, compression="gzip")
-        sig_path.write_text(sig)
     return mat, source

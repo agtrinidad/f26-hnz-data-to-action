@@ -51,6 +51,32 @@ solve:
   time_limit_s: 60
   depot: {lat: 40.4372, lon: -79.9972}   # ASSUMED: downtown Pittsburgh; replace with the team's base
 
+census:                   # scenario: check every distinct retail location once in a year (memo 04)
+  year: 2027
+  onsite_minutes: 20      # ASSUMED (same as capacity.service_minutes)
+  avg_mph: 22             # ASSUMED: converts drive minutes to miles for mileage reimbursement
+  teams_options: [1, 2, 4, 8]
+  admin_minutes: {low: 10, base: 15, high: 25}          # ASSUMED paperwork/evidence/data entry per check
+  retry_share: {low: 0.05, base: 0.10, high: 0.20}      # ASSUMED share needing a second attempt (closed, refused)
+  drive_factor: {low: 1.0, base: 1.5, high: 2.0}        # ASSUMED traffic/parking multiplier over OSM free-flow times
+  supervisor_wage: {low: 28.0, base: 35.28, high: 45.0} # PROXIED: BLS OEWS Pittsburgh compliance officers mean $35.28/h
+  purchaser_wage: {low: 15.0, base: 15.0, high: 20.0}   # SOURCED: contractor posting $15/h for under-21 purchasers
+  fringe: {low: 1.25, base: 1.35, high: 1.5}            # ASSUMED benefits/payroll load multiplier
+  mileage_rate: {low: 0.725, base: 0.76, high: 0.76}    # SOURCED: IRS 2026 business rate 72.5c (Jan-Jun), 76c (Jul-Dec)
+  commute_miles_per_route: {low: 10, base: 25, high: 50} # ASSUMED team base to city and back
+  overhead_share: {low: 0.15, base: 0.30, high: 0.50}   # ASSUMED indirect/fixed-fee share (cost-plus-fixed-fee contract)
+  data_per_check: {low: 2.0, base: 5.0, high: 10.0}     # ASSUMED data handling and QA
+  training_fixed: {low: 0, base: 2000, high: 5000}      # ASSUMED commissioning/background checks, one time
+  topdown_per_check: {low: 116, high: 400}              # PROXIED: award / 10,000 funded; award / ~2,900 published
+  followup_rate: {low: 0.58, base: 0.73, high: 0.88}    # SOURCED: share of violators re-inspected in 12 months (PA 58%, OIG 88%)
+  award_dollars: 1159731  # SOURCED: latest annual DOH tobacco award (data-sources.md); only used for share-of-award context
+  targeted_lift: 1.5      # SOURCED: observed top-decile replay lift (Gate A, ~1.47, interval 1.23-1.77); discounts the model's own p
+
+regime:                   # two implementations of one regime: budget-capped vs census floor (memo 06, ADR 0007)
+  observed_lift: 1.47     # SOURCED: Gate A pooled top-10% lift; sets how noisy the model's ranking is vs truth
+  floor_months: 9         # ASSUMED: census floor (one check per store) is completed in months 1..floor_months
+  second_pass_share: 0.25 # ASSUMED: need-weighted second pass = this share of N checks, in the remaining months
+
 eval:
   lift_fracs: [0.1, 0.2]
   n_sims: 200

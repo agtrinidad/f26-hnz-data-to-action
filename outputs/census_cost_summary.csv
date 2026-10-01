@@ -1,0 +1,4 @@
+scenario,stops,team_days,team_hours,drive_hours,total_dollars,dollars_per_check
+low,345,24,190.5,8.0,12982,37.6
+base,345,28,237.8,13.5,27096,78.5
+high,345,37,338.0,21.7,65940,191.1

@@ -93,6 +93,18 @@ def _validate_optional(data: dict[str, Any], capacity: Capacity) -> None:
     mix = data.get("prize", {}).get("site_mix")
     if mix is not None and abs(sum(mix.values()) - 1.0) > 1e-9:
         raise ConfigError("prize.site_mix must sum to 1")
+    for key, band in data.get("census", {}).items():
+        if isinstance(band, dict) and {"low", "high"} <= band.keys():
+            base = band.get("base", band["low"])
+            if not band["low"] <= base <= band["high"]:
+                raise ConfigError(f"census.{key} must satisfy low <= base <= high")
+    regime = data.get("regime", {})
+    if regime and not 1 <= regime.get("floor_months", 9) <= 11:
+        raise ConfigError("regime.floor_months must be between 1 and 11")
+    if regime and not 0 <= regime.get("second_pass_share", 0.25) <= 1:
+        raise ConfigError("regime.second_pass_share must be in [0, 1]")
+    if regime and regime.get("observed_lift", 1.0) < 1:
+        raise ConfigError("regime.observed_lift must be >= 1")
     if data.get("data", {}).get("scope", "city_limits") not in {"city_limits", "postal"}:
         raise ConfigError("data.scope must be city_limits or postal")
 

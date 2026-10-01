@@ -141,13 +141,16 @@ def fit(config, write: bool = True) -> dict:
 
 
 # --------------------------------------------------------------------------- solve
-def build_instance(config, scores: pd.DataFrame | None = None, use_osm: bool = True) -> dict:
+def build_instance(
+    config, scores: pd.DataFrame | None = None, use_osm: bool = True, retail_only: bool = True
+) -> dict:
     """Retail candidates with prizes plus the drive-time matrix (depot at node 0)."""
     if scores is None:
         scores = pd.read_csv(
             config.path("processed") / SCORES_FILE, dtype={"tract_geoid": str, "license_id": str}
         )
-    cand = unique_locations(scores[scores["retail_license"] & scores["lon"].notna()])
+    mask = scores["lon"].notna() & (scores["retail_license"] if retail_only else True)
+    cand = unique_locations(scores[mask])
     depot = config.raw["solve"]["depot"]
     pts = pd.concat(
         [pd.DataFrame({"lon": [depot["lon"]], "lat": [depot["lat"]]}), cand[["lon", "lat"]]],
@@ -336,7 +339,7 @@ def policy_metrics(selected_by_cycle: list[list[int]], inst, config, plan_minute
     """Model-based metrics for a sequence of monthly selections (candidate indices)."""
     cand = inst["cand"]
     flat = [i for c in selected_by_cycle for i in c]
-    cost = 116.0  # lower bound of the cost-per-check proxy ($116 to ~$400), docs/assumptions.md
+    cost = float(config.raw["census"]["topdown_per_check"]["low"])  # lower bound of $116-$400
     out = {
         "stores": len(flat),
         "expected_violations": metrics.expected_violations(flat, cand["p"].to_numpy()),
@@ -351,3 +354,254 @@ def policy_metrics(selected_by_cycle: list[list[int]], inst, config, plan_minute
 
 
 __all__ = ["fit", "solve", "report", "build_instance", "plan_cycle", "policy_metrics", "baselines"]
+
+
+# --------------------------------------------------------------------------- census scenario
+def census(config, write: bool = True, n_sims: int = 1000) -> dict:
+    """Cost, portioning and capture of checking every distinct retail location once a year."""
+    from tobacco_inspect.eval import census as C
+
+    params = C.CostParams.from_config(config)
+    day = config.capacity.daily_budget_minutes
+    inst = build_instance(config)
+    cand, travel = inst["cand"], inst["travel"]
+    p = cand["p"].to_numpy()
+    cost_summary = C.cost_table(travel, params, day)
+    routes, t, svc = C.build_routes(travel, params, day, "base")
+    components = pd.concat(
+        [
+            C.bottom_up_cost(*C.build_routes(travel, params, day, sc), params, sc)
+            for sc in C.SCENARIOS
+        ],
+        ignore_index=True,
+    )
+    risk_per_route = [float(p[[i - 1 for i in r]].sum()) for r in routes]
+    rng = np.random.default_rng(config.seed)
+    year, teams = int(config.raw["census"]["year"]), config.capacity.teams
+    calendars = {
+        plan: C.portion_calendar(plan, len(routes), risk_per_route, year, teams, rng)
+        for plan in "ABCD"
+    }
+    capture = C.capture_table(
+        p,
+        tracts=cand["tract_geoid"].to_numpy(),
+        n_sims=n_sims,
+        seed=config.seed,
+        lift=float(config.raw["census"]["targeted_lift"]),
+    )
+    route_rows = [
+        {
+            "route": r,
+            "stops": len(rt),
+            "minutes": round(C.partition.route_minutes(rt, t, svc), 1),
+            "expected_violations": round(risk_per_route[r], 2),
+            "licenses": " | ".join(cand.iloc[i - 1]["trade_name"] for i in rt[:3])
+            + (" ..." if len(rt) > 3 else ""),
+        }
+        for r, rt in enumerate(routes)
+    ]
+    out = {
+        "cand": cand,
+        "routes": routes,
+        "route_table": pd.DataFrame(route_rows),
+        "cost_summary": cost_summary,
+        "components": components,
+        "calendars": calendars,
+        "capture": capture,
+        "p": p,
+        "params": params,
+        "inst": inst,
+        "travel": travel,
+        "risk_per_route": risk_per_route,
+    }
+    if write:
+        outdir = config.path("outputs")
+        outdir.mkdir(parents=True, exist_ok=True)
+        out["route_table"].to_csv(outdir / "census_routes.csv", index=False)
+        cost_summary.to_csv(outdir / "census_cost_summary.csv", index=False)
+        components.to_csv(outdir / "census_cost_components.csv", index=False)
+        capture.to_csv(outdir / "census_capture.csv", index=False)
+        pd.concat(calendars.values()).to_csv(outdir / "census_calendars.csv", index=False)
+    return out
+
+
+# --------------------------------------------------------------------------- regime comparison
+HIDDEN_SIGMAS = (0.0, 0.5, 1.0, 1.5)
+RESPONSES = {
+    "no response": {},
+    "store-specific only (delta 25%, 3 months)": {"delta": 0.25, "memory": 3},
+    "strong store-specific (delta 50%, 6 months)": {"delta": 0.5, "memory": 6},
+    "plus visibility, linear (gamma 0.3)": {"delta": 0.25, "memory": 3, "gamma": 0.3},
+}
+GAMMA_POWERS = (0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 3.0)
+
+
+def regime(config, write: bool = True, n_scale: float = 1.0) -> dict:
+    """Budget-capped vs census-floor regime comparison (memo 06). Scenario, not part of run-all.
+
+    `n_scale` shrinks every Monte Carlo size (tests); results at 1.0 are what the notebook shows.
+    """
+    from tobacco_inspect.eval import census as C
+    from tobacco_inspect.eval import regime as R
+
+    def n(k: int) -> int:
+        return max(2, int(round(k * n_scale)))
+
+    rg = config.raw["regime"]
+    params = C.CostParams.from_config(config)
+    day = config.capacity.daily_budget_minutes
+    inst = build_instance(config)
+    cand, travel = inst["cand"], inst["travel"]
+    p, h = cand["p"].to_numpy(), cand["h"].to_numpy()
+    N = len(p)
+    kappa = float(config.raw["risk"]["kappa"])
+    floor, share = int(rg["floor_months"]), float(rg["second_pass_share"])
+    cycle = config.capacity.cycle_budget
+    e2 = int(round(share * N))
+    current_year = config.capacity.budget_inspections * 4  # today's city volume (~44 a year)
+    truths = {s: R.Truth.calibrated(p, float(rg["observed_lift"]), s) for s in HIDDEN_SIGMAS}
+    truth = truths[0.0]  # conservative baseline for the census floor's second pass
+
+    front = R.frontier(
+        p,
+        travel,
+        params,
+        day,
+        [current_year, 86, 138, 207, 276],
+        truth,
+        kappa,
+        second_pass_fracs=(0.1, share, 0.5),
+        n_sims=n(150),
+        n_truth=n(300),
+    )
+    path = front[
+        front.policy.isin(["targeted", "census_floor", "census_floor+adaptive_second_pass"])
+    ].assign(policy="path")
+    second = pd.concat(
+        [
+            R.adaptive_second_pass(p, e2, kappa, t, n(300), np.random.default_rng(1))[0].assign(
+                hidden_sigma=s
+            )
+            for s, t in truths.items()
+        ],
+        ignore_index=True,
+    )
+    cap_cost = float(
+        front[front.policy == "targeted"].sort_values("checks").iloc[0].cost_per_check * cycle * 12
+    )
+    cen_row = front[
+        (front.policy == "census_floor+adaptive_second_pass") & (front.checks == N + e2)
+    ].iloc[0]
+    cen_cost = float(cen_row.cost_bottom_up)
+
+    def both(resp, sims, **kw):
+        a = R.year_sim(p, "capped", resp, truth, kappa, n_sims=n(sims), budget_per_cycle=cycle, h=h)
+        b = R.year_sim(
+            p,
+            "census_floor",
+            resp,
+            truth,
+            kappa,
+            n_sims=n(sims),
+            floor_months=floor,
+            second_pass_share=share,
+            h=h,
+            **kw,
+        )
+        return a, b
+
+    grid_rows = []
+    for name, resp in RESPONSES.items():
+        a, b = both(resp, 80)
+        grid_rows.append(
+            {
+                "response": name,
+                "capped_reduction": a["reduction"],
+                "census_reduction": b["reduction"],
+                "capped_per_1k_dollars": 100 * a["reduction"] / cap_cost * 1000,
+                "census_per_1k_dollars": 100 * b["reduction"] / cen_cost * 1000,
+                "capped_per_100_checks": 1e4 * a["reduction"] / a["checks"],
+                "census_per_100_checks": 1e4 * b["reduction"] / b["checks"],
+            }
+        )
+    shape_rows = []
+    for k in GAMMA_POWERS:
+        a, b = both({"delta": 0.25, "memory": 3, "gamma": 0.3, "gamma_power": k}, 60)
+        shape_rows.append(
+            {
+                "gamma_power": k,
+                "capped_per_1k": 100 * a["reduction"] / cap_cost * 1000,
+                "census_per_1k": 100 * b["reduction"] / cen_cost * 1000,
+            }
+        )
+    shape = pd.DataFrame(shape_rows)
+    order_rows = []
+    for name, resp in (
+        ("delta 25%, 3 months", {"delta": 0.25, "memory": 3}),
+        ("delta 50%, 6 months", {"delta": 0.5, "memory": 6}),
+    ):
+        for order in ("random", "risk_first"):
+            _, b = both(resp, 80, order=order)
+            order_rows.append(
+                {
+                    "response": name,
+                    "first_pass_order": order,
+                    "reduction": b["reduction"],
+                    "reduction_h": b["reduction_h"],
+                }
+            )
+    rule_rows = []
+    for rule in ("thompson", "static", "random"):
+        _, b = both({}, 80, second_pass=rule)
+        rule_rows.append(
+            {
+                "second_pass": rule,
+                "detections": b["detections"],
+                "distinct_violators": b["distinct_detected"],
+                "repeat_violators": b["repeat_violators"],
+            }
+        )
+    cap_run, cen_run = both({}, 120)
+    equity_tbl = R.equity_compare(
+        cand,
+        load_universe(config),
+        {"budget-capped": cap_run["counts"], "census floor + 2nd pass": cen_run["counts"]},
+    )
+    out = {
+        "cand": cand,
+        "p": p,
+        "h": h,
+        "N": N,
+        "kappa": kappa,
+        "truths": truths,
+        "truth": truth,
+        "max_sigma": R.max_hidden_sigma(p, float(rg["observed_lift"])),
+        "frontier": front,
+        "marginal": R.marginal(path, "path"),
+        "second_pass": second,
+        "second_pass_checks": e2,
+        "cap_cost": cap_cost,
+        "cen_cost": cen_cost,
+        "response_grid": pd.DataFrame(grid_rows),
+        "shape_sweep": shape,
+        "break_even_power": R.crossing(
+            shape.gamma_power.to_numpy(), (shape.census_per_1k - shape.capped_per_1k).to_numpy()
+        ),
+        "order_table": pd.DataFrame(order_rows),
+        "second_pass_rules": pd.DataFrame(rule_rows),
+        "capped_run": cap_run,
+        "census_run": cen_run,
+        "equity": equity_tbl,
+    }
+    if write:
+        outdir = config.path("outputs")
+        outdir.mkdir(parents=True, exist_ok=True)
+        for name, key in (
+            ("frontier", "frontier"),
+            ("second_pass", "second_pass"),
+            ("response_grid", "response_grid"),
+            ("shape_sweep", "shape_sweep"),
+            ("equity", "equity"),
+        ):
+            out[key].to_csv(outdir / f"regime_{name}.csv", index=False)
+    return out

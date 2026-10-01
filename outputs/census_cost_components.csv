@@ -1,0 +1,16 @@
+component,dollars,scenario
+"labor (supervisor + purchaser, with fringe)",10240.31218281081,low
+mileage,323.8093535503706,low
+data handling and QA,724.5,low
+training and commissioning (one-time),0.0,low
+overhead (indirect / fixed fee),1693.293230454177,low
+"labor (supervisor + purchaser, with fringe)",16139.48585015876,base
+mileage,806.1573557655564,base
+data handling and QA,1897.5,base
+training and commissioning (one-time),2000.0,base
+overhead (indirect / fixed fee),6252.942961777295,base
+"labor (supervisor + purchaser, with fringe)",32954.45521065394,high
+mileage,1865.7065756116297,high
+data handling and QA,4140.0,high
+training and commissioning (one-time),5000.0,high
+overhead (indirect / fixed fee),21980.080893132785,high

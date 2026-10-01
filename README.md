@@ -15,7 +15,10 @@ Harrington-style escalation. Full statement: [docs/decision-card.md](docs/decisi
 > **Status: data and optimization stages implemented.** `tobacco-inspect run-all` refreshes data, fits the risk model,
 > plans monthly cycles and writes route sheets, "why us" reasons and an equity audit. Start with the plain-language
 > [implementation memo](docs/process/03_Implementation_Results.md); sources are catalogued in
-> [APA format](docs/data-sources-apa.md); the annotated notebook is `notebooks/02_risk_and_schedule.ipynb`.
+> [APA format](docs/data-sources-apa.md); the annotated notebook is `notebooks/02_risk_and_schedule.ipynb`. A separate scenario asks what checking *every*
+> licensed location in a year would cost and capture: [census memo](docs/process/04_Census_Inspection_Scenario.md) and
+> `notebooks/03_census_vs_sampling.ipynb`. The two options compared as implementations of one need-responsive regime (budget-capped vs census floor):
+> [regime memo](docs/process/06_Regime_Comparison.md), [ADR 0007](docs/adr/0007-two-implementations-one-regime.md) and `notebooks/04_regime_comparison.ipynb`.
 > See the checklist below.
 
 ## Setup

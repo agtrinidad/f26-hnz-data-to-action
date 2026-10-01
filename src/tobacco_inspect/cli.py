@@ -14,6 +14,8 @@ COMMANDS = {
     "solve": "solve the inspection schedule",
     "report": "write route sheets and audit tables",
     "run-all": "refresh -> fit -> solve -> report",
+    "census": "scenario: check every retail location once in a year (cost, portioning, capture)",
+    "regime": "scenario: budget-capped vs census-floor regime (frontier, second pass, response)",
 }
 
 
@@ -60,6 +62,21 @@ def main(argv: list[str] | None = None) -> int:
 
         out = pipeline.report(config)
         print(f"report complete: {len(out['why_us'])} scheduled visits; equity {out['equity']}")
+        return 0
+    if args.command == "census":
+        from tobacco_inspect import pipeline
+
+        res = pipeline.census(config)
+        print(res["cost_summary"].to_string(index=False))
+        print("census outputs written to outputs/census_*.csv")
+        return 0
+    if args.command == "regime":
+        from tobacco_inspect import pipeline
+
+        res = pipeline.regime(config)
+        print(res["response_grid"].round(3).to_string(index=False))
+        print(f"break-even visibility shape: {res['break_even_power']:.2f}")
+        print("regime outputs written to outputs/regime_*.csv")
         return 0
     print(f"'{args.command}' is not implemented yet (scaffold only).", file=sys.stderr)
     return 1

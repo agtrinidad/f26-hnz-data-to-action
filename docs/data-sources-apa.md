@@ -61,6 +61,15 @@ date or DOI) and need a team check before the final report. Short factual notes 
 **Butler Eagle.** (2022, August). *[Title not captured: article on the Adagio Health tobacco compliance program]*. https://www.butlereagle.com/?p=201517 **[verify title and author]**
 - Used for: contractor context only (weak source; not used for any parameter).
 
+**Internal Revenue Service.** (2025). *IRS sets 2026 business standard mileage rate at 72.5 cents per mile, up 2.5 cents* (IR-2025-128). https://www.irs.gov/newsroom/irs-sets-2026-business-standard-mileage-rate-at-725-cents-per-mile-up-25-cents
+- Used for: mileage reimbursement in the census cost model (72.5 cents Jan-Jun 2026). A mid-year revision to 76 cents effective July 1, 2026 appeared in search results but was not confirmed on the IRS page **[verify]**.
+
+**U.S. Bureau of Labor Statistics.** (n.d.). *Occupational employment and wage statistics: Pittsburgh, PA metropolitan statistical area (38300), compliance officers (SOC 13-1041)*. U.S. Department of Labor. https://www.bls.gov/oes/2023/may/oes_38300.htm **[verify reference year; a search summary gave $35.28 an hour for both May 2023 and May 2024]**
+- Used for: the supervisor wage proxy ($35.28 an hour) in the census cost model. A proxy occupation, not the actual job.
+
+**1 Alpha Consulting.** (n.d.). *Federal tobacco undercover purchaser (under 21)* [Job posting]. https://talents.vaia.com/companies/1-alpha-consulting/federal-tobacco-undercover-purchaser-under-21-152338813/ **[verify: secondary job-board listing]**
+- Used for: purchaser wage ($15.00 an hour plus mileage reimbursement; ages 16-20, driver's license and dependable transportation required).
+
 **Western Pennsylvania Regional Data Center.** (2017). *Allegheny County tobacco vendors* [Data set, 2015 vintage]. https://data.wprdc.org/dataset/allegheny-county-tobacco-vendors
 - Examined, **not used** (superseded by the daily state list).
 
