@@ -30,10 +30,16 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
-        load_config(args.config)
+        config = load_config(args.config)
     except (ConfigError, OSError) as exc:
         print(f"config error: {exc}", file=sys.stderr)
         return 2
+    if args.command == "refresh":
+        from tobacco_inspect.data import ingest
+
+        ingest.refresh(config)
+        print("refresh complete: see data/interim and data/processed")
+        return 0
     print(f"'{args.command}' is not implemented yet (scaffold only).", file=sys.stderr)
     return 1
 

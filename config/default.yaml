@@ -10,14 +10,15 @@ geography:
   state: PA
   tract_level: true       # census tracts, not ZIP codes (mitigates MAUP; Lee et al. 2018)
 
-capacity:                 # ASSUMPTION
-  teams: 2
-  hours_per_day: 8
+capacity:                 # status per parameter: SOURCED / PROXIED / ASSUMED (docs/assumptions.md)
+  teams: 2                # ASSUMED; 1 adult supervisor + youth purchaser per team (job posting, press)
+  hours_per_day: 8        # ASSUMED standard workday
   weekdays_only: true
-  horizon_weeks: 1
-  weekly_mileage_cap: 300
-  budget_inspections: 200 # contract/budget cap B on total inspections in the horizon
-  service_minutes: 20     # time on site per inspection s_i (uniform until measured)
+  horizon_weeks: 13       # PROXIED: one quarter (decision card); a planning cycle may be shorter
+  weekly_mileage_cap: 300 # ASSUMED and likely non-binding; prefer an OSM drive-time limit
+  budget_inspections: 11  # PROXIED: City-limits undercover checks FY2022-25 average 44/yr (OCE national
+                          # files) / 4 quarters. Statewide published checks are ~2,900/yr, not 10,000.
+  service_minutes: 20     # ASSUMED, uniform until measured
 
 prize:                    # r[i,d] = h_i * p_i + lambda * delta_deterrence_i(state_i)
   lambda_deterrence: 0.25
@@ -34,6 +35,18 @@ coverage:
 harrington:               # ASSUMPTION: escalation states
   states: [low, high]
   escalate_after_violation: true
+
+data:                     # source locations and vintages (see docs/data-sources.md)
+  scope: city_limits      # city_limits (Pittsburgh city polygon, decided 2026-09-30) | postal
+  state_fips: "42"
+  county_fips: "003"      # Allegheny
+  city_place_geoid: "4261000"   # Pittsburgh city (Census place), used for the city-limits flag
+  pa_license_dataset: ut72-sft8 # data.pa.gov Tobacco Products Tax Licenses, refreshed daily
+  tiger_year: 2023        # Census cartographic boundary vintage (tracts, places)
+  nces_public_school_year: "2324"
+  nces_private_school_year: "2122"
+  acs_source: censusreporter    # censusreporter (keyless) | census_api (needs CENSUS_API_KEY)
+  school_radii_m: [300, 1000]
 
 paths:                    # always relative to the repository root
   raw: data/raw

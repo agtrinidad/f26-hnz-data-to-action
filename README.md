@@ -4,14 +4,17 @@ CMU 94-867 *From Data to Action* (Fall 2026) group project.
 Team: Abigail Torbatian (atorbati@andrew.cmu.edu), Avery Trinidad (agtrinid@andrew.cmu.edu),
 Anastasia Harouse (aharouse@andrew.cmu.edu).
 
+**Scope.** City of Pittsburgh limits (Census place polygon), not the wider postal Pittsburgh area.
+
 **Decision question.** How can the PA Department of Health prioritize, schedule and execute retail
 tobacco inspections in Pittsburgh to maximize collective compliance under a limited inspection
 budget? We model it as a budgeted prize-collecting TSP (team orienteering with weekdays and time
 budgets), with a predicted-risk prize, randomized coverage (Thompson sampling), and
 Harrington-style escalation. Full statement: [docs/decision-card.md](docs/decision-card.md).
 
-> **Status: scaffold.** The repository structure, config, CI and a toy optimization test exist.
-> The data pipeline, risk model and full scheduling model are stubs (`NotImplementedError`).
+> **Status: data stage done, modeling not started.** `tobacco-inspect refresh` builds the retailer universe
+> and enrichment features ([log](docs/process/02_Data_Acquisition_Memo.md)). The risk model and full
+> scheduling model are stubs (`NotImplementedError`).
 > See the checklist below.
 
 ## Setup
@@ -41,8 +44,8 @@ uv run tobacco-inspect report     # 4. route sheets + audits    -> outputs/
 uv run tobacco-inspect run-all    # 1-4 in order
 ```
 
-Exploration notebooks live in `notebooks/` (run in numeric order). Currently every subcommand
-exits with "not implemented yet".
+Exploration notebooks live in `notebooks/` (run in numeric order). Currently only `refresh` is implemented; the other
+subcommands exit with "not implemented yet".
 
 ## Repository layout
 
