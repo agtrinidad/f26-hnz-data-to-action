@@ -1,6 +1,7 @@
 # Data sources
 
 From the project plan. Link check run 2026-09-30 (see Status column); retrieval dates are in [data/README.md](../data/README.md).
+APA-formatted catalog with local files and outputs: [data-sources-apa.md](data-sources-apa.md).
 Tier and use of each source: see [process/02_Data_Acquisition_Memo.md](process/02_Data_Acquisition_Memo.md).
 
 | Source | URL | Tier / status (2026-09-30) |
@@ -9,7 +10,7 @@ Tier and use of each source: see [process/02_Data_Acquisition_Memo.md](process/0
 | PA Dept. of Revenue tobacco licensing | https://www.pa.gov/agencies/revenue/resources/tax-types-and-information/tobacco-products/tobacco-products-taxes-licensing | Documentation only. Reachable |
 | Act 57 of 2025 (vape directory, licensing) | https://www.pa.gov/agencies/revenue/resources/tax-types-and-information/tobacco-products/requirements-for-tobacco-products-and-licensing |  |
 | PA DOH FDA compliance program | https://www.pa.gov/agencies/health/programs/healthy-living/tobacco-prevention-and-control/fda-program | Documentation; source of the 10,000/yr figure. Verified |
-| SAMHSA Synar program | https://www.samhsa.gov/synar/about-synar | Calibration only; not pulled |
+| SAMHSA Synar program | https://www.samhsa.gov/synar/about-synar | Context only; the PA DOH 2025 Synar report (data/pdf) is now the data source and the random-sample benchmark |
 | Open Data Pennsylvania (active license list) | https://data.pa.gov/ |  |
 | Census Geocoder | https://geocoder.census.gov/ | Must. Batch API used |
 | ACS 5-year data and API | https://www.census.gov/data/developers/data-sets/acs-5year.html | Should. API needs a key; pulled via Census Reporter instead (2020-2024) |

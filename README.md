@@ -12,9 +12,10 @@ budget? We model it as a budgeted prize-collecting TSP (team orienteering with w
 budgets), with a predicted-risk prize, randomized coverage (Thompson sampling), and
 Harrington-style escalation. Full statement: [docs/decision-card.md](docs/decision-card.md).
 
-> **Status: data stage done, modeling not started.** `tobacco-inspect refresh` builds the retailer universe
-> and enrichment features ([log](docs/process/02_Data_Acquisition_Memo.md)). The risk model and full
-> scheduling model are stubs (`NotImplementedError`).
+> **Status: data and optimization stages implemented.** `tobacco-inspect run-all` refreshes data, fits the risk model,
+> plans monthly cycles and writes route sheets, "why us" reasons and an equity audit. Start with the plain-language
+> [implementation memo](docs/process/03_Implementation_Results.md); sources are catalogued in
+> [APA format](docs/data-sources-apa.md); the annotated notebook is `notebooks/02_risk_and_schedule.ipynb`.
 > See the checklist below.
 
 ## Setup
@@ -44,8 +45,7 @@ uv run tobacco-inspect report     # 4. route sheets + audits    -> outputs/
 uv run tobacco-inspect run-all    # 1-4 in order
 ```
 
-Exploration notebooks live in `notebooks/` (run in numeric order). Currently only `refresh` is implemented; the other
-subcommands exit with "not implemented yet".
+Exploration notebooks live in `notebooks/` (run in numeric order). All four steps are implemented. Outputs land in `data/processed/` and `outputs/`.
 
 ## Repository layout
 

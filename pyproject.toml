@@ -37,7 +37,16 @@ should = ["statsmodels>=0.14", "matplotlib>=3.9", "folium>=0.17"]
 stretch = ["gymnasium>=1.0", "gurobi-machinelearning>=1.5"]
 # Open-source solver fallback (set `solver: appsi_highs` in config)
 fallback = ["highspy>=1.8"]
-dev = ["pytest>=8.0", "ruff>=0.8", "pre-commit>=4.0", "nbstripout>=0.8"]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8",
+    "pre-commit>=4.0",
+    "nbstripout>=0.8",
+    "ipykernel>=6.29",
+    "nbclient>=0.10",
+    "nbformat>=5.10",
+    "nbconvert>=7.17.1",
+]
 
 [project.scripts]
 tobacco-inspect = "tobacco_inspect.cli:main"
@@ -56,3 +65,7 @@ src = ["src", "tests", "scripts"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "W"]
+
+[tool.ruff.lint.per-file-ignores]
+# The notebook generator embeds long markdown/code strings
+"scripts/build_notebook_02.py" = ["E501"]

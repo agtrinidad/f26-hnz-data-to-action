@@ -14,43 +14,15 @@ Outputs
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from tobacco_inspect.data import geocode, ingest
+from tobacco_inspect.data import geocode, ingest, synar
 
 PGH_BBOX = (-80.35, 40.30, -79.75, 40.60)  # lon/lat box around the city plus a margin
 UTM17N = "EPSG:32617"
-
-# --------------------------------------------------------------------------- store type
-STORE_PATTERNS = [
-    ("smoke_vape_shop", r"\b(SMOKE|VAPE|VAPOR|TOBACCO|CIGAR|HOOKAH|CBD|KRATOM|420|LIQUID)\b"),
-    ("pharmacy", r"\b(CVS|RITE ?AID|WALGREEN|PHARMAC|DRUG)\b"),
-    ("dollar_discount", r"\b(DOLLAR|FIVE BELOW|BIG LOTS|FAMILY DLR)\b"),
-    (
-        "gas_convenience",
-        r"\b(GETGO|GET GO|SHEETZ|SUNOCO|SPEEDWAY|7[- ]?ELEVEN|SHELL|GULF|BP|EXXON|"
-        r"MARATHON|CITGO|LUKOIL|WAWA|GAS|FUEL|PETRO|MART|CONVENIENCE|MINI ?MARKET|"
-        r"FOOD ?MART|QUICK ?STOP|CORNER STORE)\b",
-    ),
-    (
-        "grocery_supermarket",
-        r"\b(GIANT EAGLE|ALDI|SHOP ?N ?SAVE|WHOLE FOODS|TRADER JOE|GROCER|"
-        r"SUPERMARKET|MARKET|FOODS|FOOD)\b",
-    ),
-    ("bar_restaurant", r"\b(BAR|TAVERN|PUB|GRILL|RESTAURANT|CAFE|LOUNGE|CLUB|INN|PIZZA)\b"),
-]
-
-
-def classify_store(name: str) -> str:
-    text = str(name).upper()
-    for label, pattern in STORE_PATTERNS:
-        if re.search(pattern, text):
-            return label
-    return "other"
 
 
 # --------------------------------------------------------------------------- schools and sites
@@ -247,7 +219,7 @@ def build_features(config) -> pd.DataFrame:
     )
     if not sites.empty:
         feats = feats.join(proximity_features(universe, sites, "youth_site", radii))
-    feats["store_type"] = universe["trade_name"].map(classify_store)
+    feats["outlet_type"] = universe["trade_name"].map(synar.classify_outlet)
     chain_counts = (
         universe["legal_name"].str.upper().map(universe["legal_name"].str.upper().value_counts())
     )

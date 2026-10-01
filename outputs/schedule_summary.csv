@@ -1,0 +1,4 @@
+cycle,stores,routes,route_minutes,prize,heuristic_prize,solver,status,travel_source
+1,4,1,113.2,1.8313,1.8313,gurobi,optimal,osm
+2,4,1,112.4,1.6305,1.6305,gurobi,optimal,osm
+3,4,1,107.6,1.1702,1.1702,gurobi,optimal,osm

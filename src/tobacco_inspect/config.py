@@ -30,6 +30,7 @@ class Capacity:
     weekly_mileage_cap: float
     budget_inspections: int
     service_minutes: float
+    cycle_weeks: int = 4
 
     @property
     def days(self) -> int:
@@ -39,6 +40,20 @@ class Capacity:
     @property
     def daily_budget_minutes(self) -> float:
         return self.hours_per_day * 60.0
+
+    @property
+    def cycles(self) -> int:
+        """Planning cycles (e.g. months) inside the horizon."""
+        return max(1, self.horizon_weeks // self.cycle_weeks)
+
+    @property
+    def cycle_budget(self) -> int:
+        """Inspections per cycle: the horizon budget split evenly, rounded up."""
+        return -(-self.budget_inspections // self.cycles)
+
+    @property
+    def cycle_days(self) -> int:
+        return (5 if self.weekdays_only else 7) * self.cycle_weeks
 
 
 @dataclass(frozen=True)
@@ -62,6 +77,26 @@ def _require(mapping: dict[str, Any], key: str, where: str) -> Any:
     return mapping[key]
 
 
+def _validate_optional(data: dict[str, Any], capacity: Capacity) -> None:
+    """Validate the modeling sections added for the optimization stage (all optional)."""
+    cycle = data["capacity"].get("cycle_weeks", capacity.horizon_weeks)
+    if not 1 <= int(cycle) <= capacity.horizon_weeks:
+        raise ConfigError("capacity.cycle_weeks must be between 1 and horizon_weeks")
+    risk = data.get("risk", {})
+    if risk.get("kappa", 1) <= 0:
+        raise ConfigError("risk.kappa must be > 0")
+    if risk.get("lag_days", 0) < 0:
+        raise ConfigError("risk.lag_days must be >= 0")
+    weights = data.get("harrington", {}).get("state_weights")
+    if weights is not None and (len(weights) != 5 or any(w < 0 for w in weights)):
+        raise ConfigError("harrington.state_weights needs 5 non-negative values (depth 0..4)")
+    mix = data.get("prize", {}).get("site_mix")
+    if mix is not None and abs(sum(mix.values()) - 1.0) > 1e-9:
+        raise ConfigError("prize.site_mix must sum to 1")
+    if data.get("data", {}).get("scope", "city_limits") not in {"city_limits", "postal"}:
+        raise ConfigError("data.scope must be city_limits or postal")
+
+
 def parse_config(data: dict[str, Any]) -> Config:
     """Validate a parsed YAML mapping and build a Config."""
     solver = _require(data, "solver", "config")
@@ -77,6 +112,7 @@ def parse_config(data: dict[str, Any]) -> Config:
         weekly_mileage_cap=float(_require(cap, "weekly_mileage_cap", "capacity")),
         budget_inspections=int(_require(cap, "budget_inspections", "capacity")),
         service_minutes=float(_require(cap, "service_minutes", "capacity")),
+        cycle_weeks=int(cap.get("cycle_weeks", 4)),
     )
     if capacity.teams < 1 or capacity.horizon_weeks < 1 or capacity.budget_inspections < 1:
         raise ConfigError("teams, horizon_weeks and budget_inspections must be >= 1")
@@ -92,6 +128,8 @@ def parse_config(data: dict[str, Any]) -> Config:
     weights = _require(prize, "h_weights", "prize")
     if abs(sum(weights.values()) - 1.0) > 1e-9:
         raise ConfigError("prize.h_weights must sum to 1")
+
+    _validate_optional(data, capacity)
 
     paths = _require(data, "paths", "config")
     for key, value in paths.items():

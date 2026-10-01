@@ -33,3 +33,8 @@ Project scope is the City of Pittsburgh limits (`data.scope: city_limits`). Key 
 `processed/retailer_universe.csv` (467 in-city licenses), `processed/fda_city_checks.csv.gz` (911 in-city FDA
 undercover checks), `processed/location_features.csv`, `interim/retailer_universe_postal.csv` (wider reference
 universe), `interim/fda_scope_unknown.csv` (44 locations to place manually).
+
+## Modeling artifacts (added 2026-09-30)
+`processed/risk_scores.csv` (probability, exposure, prize per license), `processed/oce_pa_checks.csv.gz` (49k PA undercover checks),
+`interim/synar_*.csv` (hand-transcribed Synar tables; check against the PDF in `data/pdf/`), `interim/travel_time_matrix.csv.gz`
+(OSM drive times, minutes). Results (git-tracked, small): `outputs/`.

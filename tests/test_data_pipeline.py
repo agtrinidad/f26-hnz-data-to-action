@@ -7,7 +7,7 @@ import pandas as pd
 import pytest
 
 from tobacco_inspect.config import REPO_ROOT
-from tobacco_inspect.data import features, geocode, ingest
+from tobacco_inspect.data import features, geocode, ingest, synar
 
 
 def test_location_keys_follow_notebook_rule():
@@ -29,10 +29,22 @@ def test_name_similarity_ignores_corporate_noise():
     assert geocode.name_similarity("Quick Stop", "Pizza Palace") < 0.55
 
 
-def test_classify_store():
-    assert features.classify_store("Mike's Vape & Smoke Shop") == "smoke_vape_shop"
-    assert features.classify_store("GETGO #3456") == "gas_convenience"
-    assert features.classify_store("Zzz Holdings") == "other"
+def test_classify_outlet_follows_synar_definitions():
+    assert synar.classify_outlet("Mike's Vape & Smoke Shop") == "tobacco_shop"
+    assert synar.classify_outlet("GETGO #3456") == "convenience_gas"
+    assert synar.classify_outlet("Giant Eagle Pharmacy") == "supermarket"
+    assert synar.classify_outlet("Family Dollar #123") == "dollar_store"
+    assert synar.classify_outlet("Joe's Corner Market") == "convenience_independent"
+    assert synar.classify_outlet("Zzz Holdings") == "other"
+
+
+def test_synar_transcription_totals():
+    synar.validate()
+    rate, lo, hi = synar.allegheny_rate()
+    assert (rate, lo, hi) == pytest.approx((0.26, 0.173, 0.347))
+    rates = synar.outlet_type_rates().set_index("outlet_type")["rate"]
+    assert rates["dollar_store"] < rates["supermarket"] < rates["convenience_gas"]
+    assert rates["convenience_gas"] < rates["tobacco_shop"]
 
 
 def test_proximity_features_distances_and_counts():

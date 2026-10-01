@@ -35,3 +35,17 @@ Evidence in [sources/README.md](sources/README.md); derivation in
   Tobacco Research 20(11), doi:10.1093/ntr/ntx149. See [references.md](references.md).
 - The roundtable transcript recommends HiGHS/CBC/OR-Tools over Gurobi for city maintainability. The
   team decided Gurobi is primary (course-provided), with HiGHS as fallback (ADR 0002).
+
+## Added with the optimization stage (2026-09-30)
+| Item | Value | Status | Basis / note |
+|---|---|---|---|
+| Planning cycle | monthly (`cycle_weeks: 4`), 3 cycles per quarter, 4 stores per cycle | PROXIED | Proposal says monthly; B per cycle = ceil(11 / 3) |
+| Thompson prior strength kappa | 5 | ASSUMED (chosen by simulation) | Moderate randomization; kappa 20 collapsed under assumed exploitation (outputs/simulation_kappa.csv) |
+| Reserved random share | 20% (at least 1 of 4 slots) | ASSUMED | From the proposal's randomization; power analysis says a Pittsburgh random arm cannot estimate base rates (memo 03) |
+| Population base rate for p_i | Synar Allegheny 26.0% (CI 17.3-34.7) | SOURCED, with caveats | Cigarettes only, summer 2025, n = 100 |
+| Deterrence weights by penalty depth | [0.25, 0.6, 0.8, 1.0, 1.0] | ASSUMED | Follows FDA's escalation ladder; the strength is not identified by data |
+| Deterrence delta, exploitation rho (simulation only) | 0 to 0.25, 0 to 0.9 | ASSUMED | Sensitivity grid; never headline |
+| Depot | downtown Pittsburgh (40.4372, -79.9972) | ASSUMED | Replace with the team's actual base |
+| Cost per check | $116 to about $400 | PROXIED | Award / funded volume, or / published volume |
+| Per-tract coverage floor | 0 (was 1) | CHANGED | About 94 tracts vs about 11 checks a quarter: arithmetically infeasible; audited instead |
+| Decision-date lag guard | 30 days | ASSUMED | Approximates publication delay; inspection dates are missing for about 90% of records |

@@ -214,8 +214,9 @@ def clean_pa_licenses(path: Path) -> pd.DataFrame:
 
 def refresh(config) -> None:
     """Download every source into data/raw and write cleaned tables to data/interim."""
-    from tobacco_inspect.data import features, geocode  # local import avoids a cycle
+    from tobacco_inspect.data import features, geocode, synar  # local import avoids a cycle
 
+    synar.write_tables(config.path("interim"))
     geocode.build_retailer_universe(config)
     write_oce_outputs(config)
     features.build_features(config)

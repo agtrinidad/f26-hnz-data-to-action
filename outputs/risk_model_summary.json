@@ -1,0 +1,32 @@
+{
+  "C": 1.0,
+  "n_train": 49032,
+  "positives": 7217,
+  "calibration_shift_logit": 0.6054375354034237,
+  "population_rate_target": 0.26,
+  "coefficients": {
+    "cat__outlet_type_pharmacy": -0.9363,
+    "cat__outlet_type_dollar_store": -0.4517,
+    "cat__outlet_type_beer_distributor": -0.4284,
+    "num__log_prior_checks": -0.3523,
+    "cat__outlet_type_supermarket": -0.3424,
+    "cat__outlet_type_other": -0.313,
+    "num__has_prior_check": -0.3039,
+    "cat__outlet_type_bar_tavern": -0.3002,
+    "num__log_chain_size": -0.1071,
+    "cat__outlet_type_news": -0.0394,
+    "num__viol_12m": 0.0297,
+    "num__prior_fy_rate": 0.0575,
+    "num__viol_24m": 0.0693,
+    "cat__outlet_type_convenience_gas": 0.1197,
+    "num__viol_36m": 0.1339,
+    "num__prior_viol_share": 0.1826,
+    "cat__outlet_type_convenience_independent": 0.2176,
+    "cat__outlet_type_tobacco_shop": 0.2441,
+    "cat__outlet_type_restaurant_deli": 0.3011,
+    "num__log_prior_viol": 0.324,
+    "num__log_days_since_check": 0.3313,
+    "num__has_prior_viol": 0.3479,
+    "num__log_days_since_viol": 0.3529
+  }
+}

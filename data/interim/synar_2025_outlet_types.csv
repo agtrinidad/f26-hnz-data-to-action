@@ -1,0 +1,12 @@
+outlet_type_synar,outlet_type,visited,violations,rate,lower,upper,source,pages
+Bar/tavern,bar_tavern,6,1,,,,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Beer distributor,beer_distributor,95,9,8.3,2.6,14.0,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Convenience/gas,convenience_gas,426,60,13.9,10.4,17.4,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Convenience/grocery/no gas,convenience_independent,278,65,23.7,18.0,29.3,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Dollar store,dollar_store,153,4,2.9,0.0,6.2,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Pharmacy/drug store,pharmacy,14,0,,,,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+News outlet,news,4,0,,,,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Restaurant/deli,restaurant_deli,39,5,,,,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Supermarket,supermarket,65,4,6.6,0.0,13.3,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Tobacco,tobacco_shop,168,38,22.3,15.3,29.4,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"
+Other,other,13,3,,,,"PA DOH 2025 Annual Synar Report (published May 2026), data/pdf/synar_report_2025.pdf","pp. 12, 14 (Tables 7, 8)"

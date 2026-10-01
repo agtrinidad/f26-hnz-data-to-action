@@ -34,11 +34,32 @@ def main(argv: list[str] | None = None) -> int:
     except (ConfigError, OSError) as exc:
         print(f"config error: {exc}", file=sys.stderr)
         return 2
-    if args.command == "refresh":
+    if args.command in {"refresh", "run-all"}:
         from tobacco_inspect.data import ingest
 
         ingest.refresh(config)
         print("refresh complete: see data/interim and data/processed")
+        if args.command == "refresh":
+            return 0
+    if args.command in {"fit", "run-all"}:
+        from tobacco_inspect import pipeline
+
+        res = pipeline.fit(config)
+        print(f"fit complete: C={res['model'].c}, scores in data/processed/{pipeline.SCORES_FILE}")
+        if args.command == "fit":
+            return 0
+    if args.command in {"solve", "run-all"}:
+        from tobacco_inspect import pipeline
+
+        _, summary, _ = pipeline.solve(config)
+        print(summary.to_string(index=False))
+        if args.command == "solve":
+            return 0
+    if args.command in {"report", "run-all"}:
+        from tobacco_inspect import pipeline
+
+        out = pipeline.report(config)
+        print(f"report complete: {len(out['why_us'])} scheduled visits; equity {out['equity']}")
         return 0
     print(f"'{args.command}' is not implemented yet (scaffold only).", file=sys.stderr)
     return 1

@@ -17,6 +17,11 @@ teaching team / DOH context; items marked ASSUMPTION are not sourced.
 
 ## Formulation (team orienteering with weekdays)
 
+> **Update 2026-09-30 (ADR 0005):** at the capacity the data support (about 11 checks a quarter, about 4 a month) the budget
+> binds, not time, so selection comes first and routing second. The 3-index model below is kept for scale-up scenarios only;
+> the implemented version uses route slots (team x day) over a pruned candidate set. See
+> [process/03_Implementation_Results.md](process/03_Implementation_Results.md).
+
 Maximize sum over teams k, days d, stores i of r[i,d] * y[i,d,k], subject to:
 
 - Each store at most once per horizon: sum over (k,d) of y[i,d,k] <= 1

@@ -19,6 +19,7 @@ capacity:                 # status per parameter: SOURCED / PROXIED / ASSUMED (d
   budget_inspections: 11  # PROXIED: City-limits undercover checks FY2022-25 average 44/yr (OCE national
                           # files) / 4 quarters. Statewide published checks are ~2,900/yr, not 10,000.
   service_minutes: 20     # ASSUMED, uniform until measured
+  cycle_weeks: 4          # monthly schedule (proposal); cycles per horizon = horizon_weeks // cycle_weeks
 
 prize:                    # r[i,d] = h_i * p_i + lambda * delta_deterrence_i(state_i)
   lambda_deterrence: 0.25
@@ -27,14 +28,32 @@ prize:                    # r[i,d] = h_i * p_i + lambda * delta_deterrence_i(sta
     youth_density: 0.3
     historical_severity: 0.3
   school_buffer_m: 300
+  site_mix: {school: 0.7, youth_site: 0.3}   # weights inside the vulnerable-site proximity score
 
 coverage:
   random_share: 0.20      # share of inspections reserved for baseline random sampling (m_S floor)
-  min_per_tract: 1        # equity floor per tract with at least one retailer
+  min_per_tract: 0        # was 1. With ~96 in-city tracts and ~11 checks a quarter a per-tract floor is
+                          # arithmetically infeasible; equity is audited instead (eval/equity.py)
 
-harrington:               # ASSUMPTION: escalation states
-  states: [low, high]
-  escalate_after_violation: true
+harrington:               # state follows FDA's escalating penalty schedule (OIG Exhibit 3)
+  state_weights: [0.25, 0.6, 0.8, 1.0, 1.0]   # ASSUMED weight by violations in last 36 months (0..4+)
+
+risk:
+  lag_days: 30            # decisions are not usable for scheduling until this long after the date
+  kappa: 5                # Thompson prior strength (pseudo-checks) around p_i; chosen by simulation (assumed behavior)
+  test_years: [2022, 2023, 2024, 2025]   # fiscal years for the time-split replay
+  n_boot: 300
+  population_rate_source: synar_allegheny # rescale mean p to the Synar Allegheny rate (26%)
+  as_of: "2026-08-31"      # last decision date in the OCE files
+
+solve:
+  candidate_pool: 30      # top-M stores by sampled prize enter the routing model
+  time_limit_s: 60
+  depot: {lat: 40.4372, lon: -79.9972}   # ASSUMED: downtown Pittsburgh; replace with the team's base
+
+eval:
+  lift_fracs: [0.1, 0.2]
+  n_sims: 200
 
 data:                     # source locations and vintages (see docs/data-sources.md)
   scope: city_limits      # city_limits (Pittsburgh city polygon, decided 2026-09-30) | postal
