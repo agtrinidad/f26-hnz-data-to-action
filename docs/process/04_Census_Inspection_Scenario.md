@@ -3,7 +3,7 @@
 **Project:** Optimizing the Order and Execution of Periodic Tobacco Retail Inspections in Pittsburgh, PA
 **Date:** 2026-09-30. **Scope:** City of Pittsburgh limits. **Companions:** [memo 03](03_Implementation_Results.md) (the targeted plan),
 [notebook 03](../../notebooks/03_census_vs_sampling.ipynb) and its [executed HTML copy](04_Census_Notebook_Executed.html),
-[ADR 0006](../adr/0006-census-as-a-scenario.md), [APA source catalog](../data-sources-apa.md), [assumptions](../assumptions.md).
+[ADR 0006](../adr/0006-census-as-a-scenario.md), [APA source catalog](../data-sources.md), [assumptions](../assumptions.md).
 
 Written for the project team and for any reader deciding whether this idea deserves money. It can be read without the code. Every number here is reproduced by
 `uv run tobacco-inspect census` and by the notebook.
@@ -75,7 +75,7 @@ A summer block (July 6 to August 21, like Synar), B quarters, C months, D risk-s
   share. Low, base and high settings for every parameter; a one-at-a-time sensitivity shows which inputs matter.
 - **Top-down:** the latest DOH award ($1,159,731) divided by checks: $116 (10,000 funded checks) or about $400 (about 2,900 published checks).
 - **Sourced inputs:** IRS 2026 mileage rate (72.5 cents Jan-Jun; a 76-cent July revision appeared in search results, to verify); a contractor posting offering under-21 purchasers $15 an hour; BLS mean $35.28 an hour for Pittsburgh
-  compliance officers as the supervisor proxy (reference year to verify). See the [APA catalog](../data-sources-apa.md). Everything else is assumed and listed in section 7.
+  compliance officers as the supervisor proxy (reference year to verify). See the [APA catalog](../data-sources.md). Everything else is assumed and listed in section 7.
 
 ### 3.5 Measure capture
 Exact expected values for each policy (`capture_*` functions), checked by Monte Carlo (300 to 3,000 runs depending on the check): census, simple random sample, absolute random draws, stratified random by tract,

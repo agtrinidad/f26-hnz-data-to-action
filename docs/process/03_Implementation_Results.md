@@ -3,7 +3,7 @@
 **Project:** Optimizing the Order and Execution of Periodic Tobacco Retail Inspections in Pittsburgh, PA
 **Date:** 2026-09-30. **Scope:** City of Pittsburgh limits. **Companion files:** [memo 02 (data)](02_Data_Acquisition_Memo.md),
 [annotated notebook](../../notebooks/02_risk_and_schedule.ipynb) and its [executed HTML copy](03_Implementation_Notebook_Executed.html),
-[APA source catalog](../data-sources-apa.md), [ADR 0005](../adr/0005-two-stage-selection-and-routing.md).
+[APA source catalog](../data-sources.md), [ADR 0005](../adr/0005-two-stage-selection-and-routing.md).
 
 
 > **Reconciliation note (2026-10-01, updated 2026-10-03):** the 11-visit quarterly proxy is rounded up to 4 stores in each of three cycles (12 visits, about 48 checks a year against the 44-a-year proxy). An exact 4/4/3 split was tried and reverted so that this memo, the simulations, the census and regime scenarios and notebooks 02 to 04 share one convention.
@@ -283,4 +283,4 @@ uv run python scripts/build_notebook_02.py # regenerates the annotated notebook
 ```
 Key files: `src/tobacco_inspect/` (model, eval, routing, data, pipeline), `config/default.yaml`, `outputs/` (results), `notebooks/02_risk_and_schedule.ipynb`
 (each Proposed Alternative paragraph quoted verbatim before the code that implements it), `docs/sources/proposed_alternative.md` (the quoted source text),
-`docs/data-sources-apa.md`, `docs/adr/0005-two-stage-selection-and-routing.md`.
+`docs/data-sources.md`, `docs/adr/0005-two-stage-selection-and-routing.md`.
