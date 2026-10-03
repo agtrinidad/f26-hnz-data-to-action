@@ -11,7 +11,7 @@ violations.
 2. Add a row to [LOG.md](LOG.md).
 3. Note in LOG.md how you validated the output before using it.
 
-The report appendix (`report/05_appendix.md`) is assembled from this folder.
+The report's GenAI appendix is assembled from this folder.
 
 ## Already in use (add the raw transcripts)
 - The project-plan roundtable (three expert personas) was generated with Gemini. Save the original

@@ -36,5 +36,5 @@ universe), `interim/fda_scope_unknown.csv` (44 locations to place manually).
 
 ## Modeling artifacts (added 2026-09-30)
 `processed/risk_scores.csv` (probability, exposure, prize per license), `processed/oce_pa_checks.csv.gz` (49k PA undercover checks),
-`interim/synar_*.csv` (hand-transcribed Synar tables; check against the PDF in `data/pdf/`), `interim/travel_time_matrix.csv.gz`
-(OSM drive times, minutes). Results (git-tracked, small): `outputs/`.
+`interim/synar_*.csv` (hand-transcribed Synar tables; check against the PDF in `data/pdf/`), `interim/travel_time_matrix_<hash>.csv.gz`
+(OSM drive times, minutes; one cache file per point set, keyed by hash). Results (git-tracked, small): `outputs/`.

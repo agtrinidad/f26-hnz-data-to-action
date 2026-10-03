@@ -33,7 +33,7 @@ dependencies = [
 [project.optional-dependencies]
 # SHOULD tier: audit, communication, tests
 should = ["statsmodels>=0.14", "matplotlib>=3.9", "folium>=0.17"]
-# STRETCH tier: only if time allows (OptiGuide is installed per its own README; see docs/course-alignment.md)
+# STRETCH tier: optional, currently unused by the pipeline (candidate for removal)
 stretch = ["gymnasium>=1.0", "gurobi-machinelearning>=1.5"]
 # Open-source solver fallback (set `solver: appsi_highs` in config)
 fallback = ["highspy>=1.8"]
