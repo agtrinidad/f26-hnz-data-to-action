@@ -67,7 +67,8 @@ small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`;
 - Raw inputs go in `data/raw/` (git-ignored). `refresh` downloads PA license lists, Census TIGER,
   NCES schools, ACS and OSM drive networks.
 - FDA inspection exports are manual downloads (the site blocks scripted access); see
-  [data/README.md](data/README.md) and [docs/data-sources.md](docs/data-sources.md).
+  [data/README.md](data/README.md) and [docs/data-sources.md](docs/data-sources.md); column
+  meanings are in [data/DICTIONARY.md](data/DICTIONARY.md).
 - Small cleaned tables in `data/interim/` and `data/processed/` and all results in `outputs/` are
   committed, so the analysis can be inspected without re-downloading.
 - Store-level files (risk scores, "why us" reasons, route sheets) are built from public license and
