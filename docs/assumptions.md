@@ -85,3 +85,15 @@ Parameters live in `config/default.yaml` under `regime:` and `census:`. Memo: [p
 | General deterrence (gamma, shape) | gamma 0.3; shape swept 0.25 to 3 | ASSUMED | Share of stores checked in the last 6 months; shape (1 linear, above 1 convex) decides which regime is cost-effective |
 | Cost of the running (capped) program | bottom-up from routes, no commissioning | PROXIED | Today's contract is already trained; switch `charge_commissioning_to_capped` |
 | Latest annual DOH award | $1,159,731 | SOURCED | Now `census.award_dollars` (context only) |
+
+## Reconciliation note (2026-10-01, updated 2026-10-03)
+The 11 quarterly checks round up to four per cycle, so the saved schedule has 12 visits (about 48 a year against the 44-a-year proxy). An exact 4/4/3 split was ported from the reconciled copy and then reverted: every other analysis uses a uniform 4 per cycle, and one convention is more useful than one store.
+
+## Added with the marginal-value analysis (2026-10-03)
+| Item | Value | Status | Basis / note |
+|---|---|---|---|
+| Headline cost basis | marginal: bottom-up increment over today's capped program (44 checks, no commissioning) | CHOSEN | ADR 0008; top-down shown as a sensitivity only |
+| Statewide published checks per year | about 2,900 | SOURCED | OCE files; `valuation.pa_published_checks_per_year`. The draft's 13% for the census implies a different count; confirm |
+| Value of a prevented sale | none asserted | CHOSEN | Memo 07 reports the price per prevented violation-equivalent instead |
+| Violation-equivalent | reduction in exposure x 88 expected violations in one full pass | ASSUMED | Not a count of sales to minors |
+| Workdays per month | 21 | ASSUMED | Converts what-if calendars to months |

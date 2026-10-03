@@ -5,6 +5,9 @@
 [annotated notebook](../../notebooks/02_risk_and_schedule.ipynb) and its [executed HTML copy](03_Implementation_Notebook_Executed.html),
 [APA source catalog](../data-sources-apa.md), [ADR 0005](../adr/0005-two-stage-selection-and-routing.md).
 
+
+> **Reconciliation note (2026-10-01, updated 2026-10-03):** the 11-visit quarterly proxy is rounded up to 4 stores in each of three cycles (12 visits, about 48 checks a year against the 44-a-year proxy). An exact 4/4/3 split was tried and reverted so that this memo, the simulations, the census and regime scenarios and notebooks 02 to 04 share one convention.
+
 Written for the project team and for any reader who has to judge whether the recommendation can be trusted. It is meant to be read
 without the code. Every number below is reproduced by `uv run tobacco-inspect run-all` and by the notebook; where a number depends on an
 assumption nobody has measured, it says so.

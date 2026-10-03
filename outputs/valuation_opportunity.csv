@@ -1,0 +1,10 @@
+measure,value,unit,label
+Pittsburgh share of PA published checks today,0.015172413793103448,share,SOURCED/PROXIED
+Census floor as a share of PA published checks,0.11896551724137931,share,SOURCED/PROXIED
+Census floor / today's city volume,7.840909090909091,x,PROXIED
+Incremental marginal dollars as share of annual award,0.025935324657183432,share,PROXIED
+Incremental marginal dollars per added check,77.72093023255815,$,ASSUMED
+DOH award per published check (low),116.0,$,PROXIED
+DOH award per published check (high),400.0,$,PROXIED
+Checks the same incremental dollars buy statewide at the high award rate,75.195,checks,PROXIED
+Checks the same incremental dollars buy statewide at the low award rate,259.2931034482759,checks,PROXIED

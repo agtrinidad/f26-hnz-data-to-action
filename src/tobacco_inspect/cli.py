@@ -16,6 +16,7 @@ COMMANDS = {
     "run-all": "refresh -> fit -> solve -> report",
     "census": "scenario: check every retail location once in a year (cost, portioning, capture)",
     "regime": "scenario: budget-capped vs census-floor regime (frontier, second pass, response)",
+    "value": "scenario: marginal cost, break-even deterrence, opportunity cost, what-ifs (memo 07)",
 }
 
 
@@ -77,6 +78,14 @@ def main(argv: list[str] | None = None) -> int:
         print(res["response_grid"].round(3).to_string(index=False))
         print(f"break-even visibility shape: {res['break_even_power']:.2f}")
         print("regime outputs written to outputs/regime_*.csv")
+        return 0
+    if args.command == "value":
+        from tobacco_inspect import pipeline
+
+        res = pipeline.valuation(config)
+        print(res["marginal"].to_string(index=False))
+        print(res["break_even"].to_string(index=False))
+        print("valuation outputs written to outputs/valuation_*.csv")
         return 0
     print(f"'{args.command}' is not implemented yet (scaffold only).", file=sys.stderr)
     return 1

@@ -1,6 +1,6 @@
 # 7. Frame the work as two implementations of one need-responsive regime, and stage the decision
 
-Status: accepted (2026-10-01). Amends [ADR 0006](0006-census-as-a-scenario.md); evidence in [memo 06](../process/06_Regime_Comparison.md) and
+Status: accepted (2026-10-01). Amends [ADR 0006](0006-census-as-a-scenario.md); cost framing extended by [ADR 0008](0008-marginal-cost-headline.md); evidence in [memo 06](../process/06_Regime_Comparison.md) and
 [notebook 04](../../notebooks/04_regime_comparison.ipynb).
 
 ## Context

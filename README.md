@@ -4,6 +4,9 @@ CMU 94-867 *From Data to Action* (Fall 2026) group project.
 Team: Abigail Torbatian (atorbati@andrew.cmu.edu), Avery Trinidad (agtrinid@andrew.cmu.edu),
 Anastasia Harouse (aharouse@andrew.cmu.edu).
 
+
+> **Reconciliation note (2026-10-01, updated 2026-10-03).** A review against the final-report draft found two issues. (1) Windows-style absolute paths are now rejected cross-platform (fixed). (2) The 11-visit quarterly budget is rounded up to 4 stores in each of three cycles, so the saved schedule holds 12 visits. An exact 4/4/3 allocation was tried and reverted on 2026-10-03: every other analysis (Gate B, policy simulation, census and regime scenarios, notebooks 02 to 04) assumes a uniform 4 per cycle, and one internally consistent convention matters more than one store. The 12-visit schedule is the documented convention (about 48 checks a year against a 44-a-year proxy).
+
 **Scope.** City of Pittsburgh limits (Census place polygon), not the wider postal Pittsburgh area.
 
 **Decision question.** How can the PA Department of Health prioritize, schedule and execute retail

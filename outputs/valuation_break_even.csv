@@ -1,0 +1,5 @@
+response,incremental_dollars,capped_reduction_pct,census_reduction_pct,required_points,achieved_points,achieved_over_required,dollars_per_point,dollars_per_prevented_violation
+no response,29779,0.0,0.0,0.0,0.0,,,
+"store-specific only (delta 25%, 3 months)",29779,0.89,6.88,7.39,5.99,0.81,4974.0,5655.0
+"strong store-specific (delta 50%, 6 months)",29779,3.04,23.25,25.3,20.2,0.8,1474.0,1676.0
+"plus visibility, linear (gamma 0.3)",29779,2.35,19.47,19.55,17.12,0.88,1739.0,1978.0

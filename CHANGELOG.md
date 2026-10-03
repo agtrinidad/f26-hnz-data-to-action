@@ -4,6 +4,7 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 ### Added
+- Marginal value (2026-10-03): `eval/valuation.py` (marginal cost over today's program, break-even deterrence without a dollar value of a sale, opportunity cost, what-if sweep, lambda robustness), `pipeline.valuation`, `tobacco-inspect value`, `valuation:` config block, memo 07, ADR 0008, tests. Windows-path check and reconciliation notes ported from Abigail Torbatian's upload (her reconciliation docs are in docs/reconciliation-2026-10-01/); her exact 4/4/3 allocator was ported and then reverted so every analysis keeps the uniform 4 stores per cycle.
 - Regime comparison (budget-capped vs census floor with a need-weighted second pass): `eval/regime.py` (truth calibrated to the observed lift, cost-vs-outcome frontier, value of first-pass labels, year simulation scored on violation exposure, equity for both regimes), `pipeline.regime`, `tobacco-inspect regime`, notebook 04, memo 06, ADR 0007 (amends 0006), `regime:` config block, tests.
 - `simulate.effective_p`: one shared response model (store-specific, frequency and general deterrence with a shape); `simulate.run` also returns exposure.
 ### Changed

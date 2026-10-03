@@ -605,3 +605,75 @@ def regime(config, write: bool = True, n_scale: float = 1.0) -> dict:
         ):
             out[key].to_csv(outdir / f"regime_{name}.csv", index=False)
     return out
+
+
+# --------------------------------------------------------------------------- marginal value
+def valuation(config, write: bool = True, n_scale: float = 1.0) -> dict:
+    """Marginal cost, break-even deterrence, opportunity cost, what-ifs, robustness (memo 07).
+
+    Scenario, not part of run-all; needs `fit` and `solve` first. Reuses `regime()` results
+    (frontier, response grid, costs) rather than recomputing them.
+    """
+    from tobacco_inspect.eval import census as C
+    from tobacco_inspect.eval import valuation as V
+
+    vcfg = config.raw["valuation"]
+    reg = regime(config, write=False, n_scale=n_scale)
+    params = C.CostParams.from_config(config)
+    inst = build_instance(config)
+    cand, travel, N = inst["cand"], inst["travel"], reg["N"]
+    current = config.capacity.budget_inspections * 4
+    marginal = V.marginal_cost_table(reg["frontier"], params, current, N, reg["second_pass_checks"])
+    full = marginal.iloc[-1]
+    break_even = V.break_even_table(
+        reg["response_grid"], reg["cap_cost"], reg["cen_cost"], float(reg["p"].sum())
+    )
+    opp = V.opportunity_cost_table(
+        params,
+        N,
+        float(full["incremental_dollars"]),
+        int(full["incremental_checks"]),
+        current,
+        int(vcfg["pa_published_checks_per_year"]),
+        float(config.raw["census"]["award_dollars"]),
+    )
+    summary = pd.read_csv(config.path("outputs") / "schedule_summary.csv")
+    whatif = pd.concat(
+        [
+            V.whatif_census(travel, params, vcfg["whatif_day_hours"], vcfg["whatif_teams"]).assign(
+                scenario="census floor"
+            ),
+            V.whatif_capped(summary, vcfg["whatif_day_hours"], (1, 2, 3)).assign(
+                scenario="capped plan"
+            ),
+        ],
+        ignore_index=True,
+    )
+    robustness = V.lambda_robustness(
+        config, cand, vcfg["lambdas"], config.capacity.budget_inspections
+    )
+    restated = pd.DataFrame(
+        {
+            "quantity": [
+                "break-even visibility shape (gamma_power)",
+                "max hidden sigma consistent with observed lift",
+            ],
+            "value": [reg["break_even_power"], reg["max_sigma"]],
+            "source": ["regime_shape_sweep.csv", "regime_second_pass.csv"],
+        }
+    )
+    out = {
+        "marginal": marginal,
+        "break_even": break_even,
+        "opportunity": opp,
+        "whatif": whatif,
+        "robustness": robustness,
+        "restated": restated,
+        "regime": reg,
+    }
+    if write:
+        outdir = config.path("outputs")
+        outdir.mkdir(parents=True, exist_ok=True)
+        for key in ("marginal", "break_even", "opportunity", "whatif", "robustness", "restated"):
+            out[key].to_csv(outdir / f"valuation_{key}.csv", index=False)
+    return out

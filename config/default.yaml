@@ -77,6 +77,12 @@ regime:                   # two implementations of one regime: budget-capped vs 
   floor_months: 9         # ASSUMED: census floor (one check per store) is completed in months 1..floor_months
   second_pass_share: 0.25 # ASSUMED: need-weighted second pass = this share of N checks, in the remaining months
 
+valuation:               # marginal value and what-ifs (memo 07, ADR 0008)
+  pa_published_checks_per_year: 2900   # SOURCED: statewide published undercover checks per year (OCE files; data-sources.md)
+  lambdas: [0.0, 0.25, 0.5]            # robustness rows for prize.lambda_deterrence (double-counting concern)
+  whatif_day_hours: [4, 8]             # field-day lengths for the what-if sweep
+  whatif_teams: [1, 2, 3, 4, 8]        # team counts for the what-if sweep
+
 eval:
   lift_fracs: [0.1, 0.2]
   n_sims: 200

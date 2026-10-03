@@ -1,0 +1,4 @@
+lambda_deterrence,is_baseline,top_n,overlap_with_baseline,distinct_tracts,mean_p,mean_h
+0.0,False,11,6,10,0.442,0.47
+0.25,True,11,11,11,0.412,0.446
+0.5,False,11,11,11,0.412,0.446

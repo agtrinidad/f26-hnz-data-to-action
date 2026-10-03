@@ -42,6 +42,7 @@ Pinned versions (`uv.lock`), model card, assumptions list, tests passing, named 
 | `report` | `outputs/why_us.csv`, `outputs/coverage_by_tract.csv`, `outputs/equity_summary.json` |
 | `run-all` | all of the above in order |
 | `census` | Scenario only (not part of `run-all`): `outputs/census_routes.csv`, `census_cost_summary.csv`, `census_cost_components.csv`, `census_capture.csv`, `census_calendars.csv` |
+| `value` | Scenario only (needs `fit` and `solve` first): `outputs/valuation_marginal.csv`, `valuation_break_even.csv`, `valuation_opportunity.csv`, `valuation_whatif.csv`, `valuation_robustness.csv`, `valuation_restated.csv` (about 20 seconds) |
 | `regime` | Scenario only (not part of `run-all`; needs `fit` first): `outputs/regime_frontier.csv`, `regime_second_pass.csv`, `regime_response_grid.csv`, `regime_shape_sweep.csv`, `regime_equity.csv` (about 20 seconds) |
 
 The notebook `notebooks/02_risk_and_schedule.ipynb` rebuilds with `uv run python scripts/build_notebook_02.py`; an executed copy is

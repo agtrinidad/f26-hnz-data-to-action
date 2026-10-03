@@ -7,7 +7,7 @@ unchanged on any machine.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Any
 
 import yaml
@@ -48,7 +48,7 @@ class Capacity:
 
     @property
     def cycle_budget(self) -> int:
-        """Inspections per cycle: the horizon budget split evenly, rounded up."""
+        """Inspections per cycle: the horizon budget split evenly, rounded up (11 -> 4, 4, 4)."""
         return -(-self.budget_inspections // self.cycles)
 
     @property
@@ -146,7 +146,11 @@ def parse_config(data: dict[str, Any]) -> Config:
     paths = _require(data, "paths", "config")
     for key, value in paths.items():
         p = Path(value)
-        if p.is_absolute() or p.drive or value.startswith(("/", "\\")):
+        if (
+            p.is_absolute()
+            or PureWindowsPath(str(value)).is_absolute()
+            or value.startswith(("/", "\\"))
+        ):
             raise ConfigError(f"paths.{key} must be relative to the repo root, got {value!r}")
 
     return Config(

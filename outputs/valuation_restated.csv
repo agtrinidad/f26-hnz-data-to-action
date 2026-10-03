@@ -1,0 +1,3 @@
+quantity,value,source
+break-even visibility shape (gamma_power),1.1744182955286782,regime_shape_sweep.csv
+max hidden sigma consistent with observed lift,1.7405969928950071,regime_second_pass.csv
