@@ -1,69 +1,97 @@
-# Optimizing the Order and Execution of Periodic Tobacco Retail Inspections in Pittsburgh, PA
+# Tobacco Retail Inspections in Pittsburgh: Who to Check, When, and at What Cost
 
-CMU 94-867 *From Data to Action* (Fall 2026) group project.
-Team: Abigail Torbatian (atorbati@andrew.cmu.edu), Avery Trinidad (agtrinid@andrew.cmu.edu),
-Anastasia Harouse (aharouse@andrew.cmu.edu).
+A decision-support pipeline for the Pennsylvania Department of Health (DOH). It ranks the licensed
+tobacco retailers in the City of Pittsburgh by risk of selling to minors, draws a randomized
+inspection schedule within a fixed budget, and prices what it would cost to check every store.
 
+Built for CMU Heinz 94-867 *From Data to Action* (Fall 2026) by Abigail Torbatian, Avery Trinidad and
+Anastasia Harouse.
 
-> **Reconciliation note (2026-10-01, updated 2026-10-03).** A review against the final-report draft found two issues. (1) Windows-style absolute paths are now rejected cross-platform (fixed). (2) The 11-visit quarterly budget is rounded up to 4 stores in each of three cycles, so the saved schedule holds 12 visits. An exact 4/4/3 allocation was tried and reverted on 2026-10-03: every other analysis (Gate B, policy simulation, census and regime scenarios, notebooks 02 to 04) assumes a uniform 4 per cycle, and one internally consistent convention matters more than one store. The 12-visit schedule is the documented convention (about 48 checks a year against a 44-a-year proxy).
+## The question
 
-**Scope.** City of Pittsburgh limits (Census place polygon), not the wider postal Pittsburgh area.
+How can DOH prioritize, schedule and execute retail tobacco inspections in Pittsburgh to maximize
+compliance under a limited inspection budget? We model it as a budgeted selection problem with an
+optional routing layer: a predicted-risk prize, randomized coverage (Thompson sampling) so the list
+is not predictable, and Harrington-style escalation for repeat violators. Full statement:
+[decision card](docs/decision-card.md).
 
-**Decision question.** How can the PA Department of Health prioritize, schedule and execute retail
-tobacco inspections in Pittsburgh to maximize collective compliance under a limited inspection
-budget? We model it as a budgeted prize-collecting TSP (team orienteering with weekdays and time
-budgets), with a predicted-risk prize, randomized coverage (Thompson sampling), and
-Harrington-style escalation. Full statement: [docs/decision-card.md](docs/decision-card.md).
+## What we found
 
-> **Status: data and optimization stages implemented.** `tobacco-inspect run-all` refreshes data, fits the risk model,
-> plans monthly cycles and writes route sheets, "why us" reasons and an equity audit. Start with the plain-language
-> [implementation memo](docs/process/03_Implementation_Results.md); sources are catalogued in
-> [APA format](docs/data-sources-apa.md); the annotated notebook is `notebooks/02_risk_and_schedule.ipynb`. A separate scenario asks what checking *every*
-> licensed location in a year would cost and capture: [census memo](docs/process/04_Census_Inspection_Scenario.md) and
-> `notebooks/03_census_vs_sampling.ipynb`. The two options compared as implementations of one need-responsive regime (budget-capped vs census floor):
-> [regime memo](docs/process/06_Regime_Comparison.md), [ADR 0007](docs/adr/0007-two-implementations-one-regime.md) and `notebooks/04_regime_comparison.ipynb`.
-> See the checklist below.
+Every result is labeled **observed** (real records), **simulated** (on an assumed truth) or
+**assumed**. Details and caveats are in the [implementation memo](docs/process/03_Implementation_Results.md).
 
-## Setup
+- **Risk is predictable.** On Pennsylvania undercover checks (FY2022-25), the top 10% of the model's
+  ranking holds about 1.5x the average violation rate (95% interval about 1.2 to 1.8). *Observed.*
+- **At the real budget, routing barely matters.** About 4 inspections a month fit in a single
+  team-day, so the budget binds, not travel time. A ranked, randomized list with simple batching
+  matches the optimizer. *Observed and simulated.*
+- **A predictable list is a weakness.** If stores react to inspection frequency, repeating the same
+  top stores falls below random; rotating with randomness holds at roughly 1.2 to 1.4x random.
+  *Simulated.*
+- **Checking every store is affordable but its payoff is unproven.** A census of about 345 city
+  checks adds about $24K to $30K a year over today's program (roughly $330 per added violator found).
+  Whether it deters sales depends on an unmeasured response. Break-even tables show what that
+  response must be. See the [marginal value memo](docs/process/07_Marginal_Value_and_Framing.md).
+- **What we cannot claim:** that any schedule reduces underage sales (no deterrence data), or
+  Pittsburgh-specific effect sizes (too few violations).
+
+## Quickstart
 
 Requires Python 3.11-3.13 and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv sync --extra dev          # add --extra should for statsmodels/matplotlib/folium
+uv sync --extra dev
 uv run pytest
+uv run tobacco-inspect run-all     # refresh -> fit -> solve -> report
 ```
 
-**Solver.** Gurobi is the primary solver (course-provided). `gurobipy` installs from PyPI with a
-size-limited license that covers small instances; for full-size runs use your academic license
-(set `GRB_LICENSE_FILE`; never commit `gurobi.lic`). To run without Gurobi, install the
-`fallback` extra (`uv sync --extra fallback`) and set `solver: appsi_highs` in
-`config/default.yaml`.
-
-## Running (target execution order)
-
-All commands read `config/default.yaml`; all paths are relative to the repo root.
+Individual steps (all read [config/default.yaml](config/default.yaml); paths are repo-relative):
 
 ```bash
-uv run tobacco-inspect refresh    # 1. download + clean sources -> data/raw, data/interim
-uv run tobacco-inspect fit        # 2. risk model p_i           -> data/processed
-uv run tobacco-inspect solve      # 3. schedule                 -> outputs/
-uv run tobacco-inspect report     # 4. route sheets + audits    -> outputs/
-uv run tobacco-inspect run-all    # 1-4 in order
+uv run tobacco-inspect refresh    # download + clean sources -> data/raw, data/interim
+uv run tobacco-inspect fit        # risk model                -> data/processed
+uv run tobacco-inspect solve      # monthly schedule          -> outputs/
+uv run tobacco-inspect report     # route sheets + audits     -> outputs/
+uv run tobacco-inspect census     # check-every-store scenario
+uv run tobacco-inspect regime     # budget-capped vs census comparison
+uv run tobacco-inspect value      # marginal cost and break-even analysis
 ```
 
-Exploration notebooks live in `notebooks/` (run in numeric order). All four steps are implemented. Outputs land in `data/processed/` and `outputs/`.
+**Solver.** Gurobi is the primary solver. `gurobipy` from PyPI has a size-limited license that covers
+small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`; never commit
+`gurobi.lic`). To run without Gurobi, `uv sync --extra fallback` and set `solver: appsi_highs` in
+`config/default.yaml`.
+
+## Data
+
+- Raw inputs go in `data/raw/` (git-ignored). `refresh` downloads PA license lists, Census TIGER,
+  NCES schools, ACS and OSM drive networks.
+- FDA inspection exports are manual downloads (the site blocks scripted access); see
+  [data/README.md](data/README.md) and [docs/data-sources.md](docs/data-sources.md).
+- Small cleaned tables in `data/interim/` and `data/processed/` and all results in `outputs/` are
+  committed, so the analysis can be inspected without re-downloading.
+- Store-level files (risk scores, "why us" reasons, route sheets) are built from public license and
+  inspection records. Read the [assumptions](docs/assumptions.md): scores are a screening aid, not
+  a finding about any business.
 
 ## Repository layout
 
 | Path | Contents |
 |---|---|
-| `src/tobacco_inspect/` | Package: `config`, `data/`, `routing/`, `model/`, `eval/`, `cli` |
-| `config/default.yaml` | Capacity, solver, prize weights, coverage floors (edit here, not in code) |
-| `data/` | `raw/` (git-ignored), `interim/`, `processed/` (small, committed so the zip runs offline) |
-| `notebooks/` | Analysis notebooks (outputs stripped) |
+| `src/tobacco_inspect/` | Package: `data/` (ingest, features), `model/` (risk, Thompson, orienteering), `routing/`, `eval/` (backtest, census, regime, valuation), `pipeline.py`, `cli.py` |
+| `config/default.yaml` | Budget, capacity, solver, prize weights, assumptions (edit here, not in code) |
+| `data/` | `raw/` (git-ignored), `interim/`, `processed/`, `pdf/` |
+| `outputs/` | Schedules, route sheets, simulations, valuation tables (small CSV/JSON) |
+| `notebooks/` | Annotated analysis (01 EDA; 02-04 generated by `scripts/build_notebook_0*.py`) |
 | `tests/` | pytest suite |
-| `docs/` | Decision card, data sources, runbook, assumptions, LLM log |
-| `scripts/package_submission.py` | Builds the Gradescope zip; `--check` verifies portability |
+| `docs/` | [Decision card](docs/decision-card.md), [assumptions](docs/assumptions.md), [data sources](docs/data-sources.md), [runbook](docs/runbook.md), [ADRs](docs/adr/), [analysis memos](docs/process/) |
+| `scripts/` | Notebook builders and `package_submission.py` (course zip) |
+
+## AI use
+
+Claude Code (Anthropic) and Gemini assisted with scaffolding, code and drafting. The course's
+GenAI log is in [docs/llm-transcripts/](docs/llm-transcripts/). All numbers are reproducible from
+the code and were checked by the authors.
 
 ## License
 

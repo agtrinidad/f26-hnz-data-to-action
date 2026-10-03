@@ -29,5 +29,3 @@ jobs:
         run: uv run pytest
       - name: Portability check (no absolute paths, data size guard)
         run: uv run python scripts/package_submission.py --check
-
-  # Data files are committed only if small; see CONTRIBUTING.md.

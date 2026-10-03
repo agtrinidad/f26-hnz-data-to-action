@@ -38,3 +38,8 @@ Thumbs.db
 .obsidian/
 
 cache/
+
+# Rendered copies of markdown (regenerate; executed-notebook HTML in docs/process is kept for now)
+docs/*.html
+docs/*_files/
+docs/deliverable/**/*.html

@@ -11,25 +11,14 @@ from pathlib import Path
 
 import nbformat as nbf
 
+from _nb import cells, code, md
+
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "docs" / "sources" / "proposed_alternative.md"
 OUT = ROOT / "notebooks" / "02_risk_and_schedule.ipynb"
 
 paras = [p.strip() for p in SRC.read_text(encoding="utf-8").split("\n") if p.strip()]
 HEADING, P1, P2, P3, P4 = paras  # heading + four paragraphs
-
-cells = []
-
-
-def md(text: str, tags=None):
-    c = nbf.v4.new_markdown_cell(text.strip("\n"))
-    if tags:
-        c.metadata["tags"] = tags
-    cells.append(c)
-
-
-def code(text: str):
-    cells.append(nbf.v4.new_code_cell(text.strip("\n")))
 
 
 def quote(paragraph: str, label: str):
