@@ -44,11 +44,20 @@ def text_editor(key: str, defaults: dict[str, str]) -> dict[str, str]:
     return {k: v for k, v in edited.items() if v != defaults[k]}
 
 
+def transparent() -> bool:
+    """Sidebar 'transparent background' choice (set in app.py)."""
+    return bool(st.session_state.get("png-transparent", False))
+
+
 def download_buttons(key: str, fig, dpi: int, table=None, spec_json: str | None = None) -> None:
     """PNG always; CSV of the plotted data and the chart recipe when provided."""
     cols = st.columns([1, 1, 1, 3])
     cols[0].download_button(
-        "Download PNG", registry.to_png_bytes(fig, dpi), f"{key}.png", "image/png", key=f"png-{key}"
+        "Download PNG",
+        registry.to_png_bytes(fig, dpi, transparent()),
+        f"{key}.png",
+        "image/png",
+        key=f"png-{key}",
     )
     if table is not None:
         cols[1].download_button(

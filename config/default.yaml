@@ -101,6 +101,7 @@ data:                     # source locations and vintages (see docs/data-sources
 
 viz:                      # report figures and dashboard (ADR 0009); styled after the class deck
   dpi: 300
+  transparent: false      # PNG background; the dashboard has a checkbox and the CLI a --transparent flag
   figsize: [10.0, 5.6]    # 16:9-ish, matches slide content area
   font: [Open Sans, Segoe UI, DejaVu Sans]   # first installed family wins
   palette:

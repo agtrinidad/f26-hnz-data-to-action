@@ -35,6 +35,22 @@ MAP_MODES = ("points", "choropleth", "density")
 # --- map --------------------------------------------------------------------------------------
 
 
+def _zoom(ax, spec) -> None:
+    """Crop the view to 1/zoom of the full extent around the chosen center (default: middle)."""
+    zoom = float(spec.opt("zoom", 1.0))
+    if zoom <= 1.0:
+        return
+    x0, x1 = ax.get_xlim()
+    y0, y1 = ax.get_ylim()
+    cx = spec.opt("center_lon")
+    cy = spec.opt("center_lat")
+    cx = (x0 + x1) / 2 if cx is None else float(cx)
+    cy = (y0 + y1) / 2 if cy is None else float(cy)
+    hw, hh = (x1 - x0) / (2 * zoom), (y1 - y0) / (2 * zoom)
+    ax.set_xlim(cx - hw, cx + hw)
+    ax.set_ylim(cy - hh, cy + hh)
+
+
 def _compute_map(df, spec, config):
     d = apply_filters(df, spec.filters)
     if spec.opt("map_mode", "points") == "choropleth":
@@ -148,6 +164,7 @@ def _draw_map(plot, spec, config, ctx):
             label="School",
         )
     ax.autoscale_view()
+    _zoom(ax, spec)
     return finish(fig, spec, config, title)
 
 
@@ -165,6 +182,7 @@ KINDS["map"] = ChartKind(
         Opt("eps_m", "int", 400, "Cluster radius (m)", 150, 1000),
         Opt("min_samples", "int", 4, "Min stores per cluster", 2, 10),
         Opt("schools", "bool", False, "Show schools"),
+        Opt("zoom", "float", 1.0, "Zoom (1 = whole city)", 1.0, 12.0),
         Opt("gridsize", "int", 25, "Density grid size", 10, 60),
     ),
     uses_agg=True,

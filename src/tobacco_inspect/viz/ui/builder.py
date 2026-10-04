@@ -105,6 +105,28 @@ def _option(o: Opt, df: pd.DataFrame, pre: str):
     return st.multiselect(o.label, list(df.columns), key=key)
 
 
+def _center(df: pd.DataFrame, pre: str, cfg) -> dict:
+    """'Center on' picker for a zoomed map: the whole city, or the middle of one tract's stores."""
+    if "tract_geoid" not in df.columns or "lon" not in df.columns:
+        return {}
+    tracts = sorted(df["tract_geoid"].dropna().unique())
+    _seed(pre + "o-center_tract", None)
+    pick = st.selectbox(
+        "Center on",
+        [None, *tracts],
+        key=pre + "o-center_tract",
+        format_func=lambda t: "Middle of the map" if t is None else f"Tract {t}",
+    )
+    if pick is None:
+        return {}
+    rows = df[df["tract_geoid"] == pick]
+    return {
+        "center_tract": pick,
+        "center_lon": float(rows["lon"].mean()),
+        "center_lat": float(rows["lat"].mean()),
+    }
+
+
 def _kpis(df: pd.DataFrame, pre: str, cfg) -> list[dict]:
     _seed(pre + "kpi-n", 3)
     n = st.number_input("Number of tiles", 1, 4, key=pre + "kpi-n")
@@ -177,6 +199,8 @@ def page(cfg, data, dpi: int) -> None:
             top_n = int(n) or None
         filters = _filters(df, pre, cfg)
         options = {o.name: _option(o, df, pre) for o in kind.options}
+        if kind_name == "map" and options.get("zoom", 1) > 1:
+            options.update(_center(df, pre, cfg))
         if kind_name == "kpi":
             options["kpis"] = _kpis(df, pre, cfg)
 

@@ -209,3 +209,42 @@ def test_builder_page_runs_for_every_kind():
     for kind in KINDS:
         at.selectbox(key="b-kind").set_value(kind).run()
         assert not at.exception, kind
+
+
+def test_map_zoom_crops_view_around_center(cfg, data):
+    base = S("stores", "map", color="prize")
+    full = registry.render_spec(base, data, cfg).axes[0]
+    xs = full.get_xlim()
+    stores = datasets.load("stores", data, cfg)
+    cx, cy = float(stores["lon"].median()), float(stores["lat"].median())
+    zoomed = S(
+        "stores", "map", color="prize",
+        options={"zoom": 4, "center_lon": cx, "center_lat": cy},
+    )  # fmt: skip
+    ax = registry.render_spec(zoomed, data, cfg).axes[0]
+    assert np.isclose(ax.get_xlim()[1] - ax.get_xlim()[0], (xs[1] - xs[0]) / 4)
+    assert np.isclose(np.mean(ax.get_xlim()), cx) and np.isclose(np.mean(ax.get_ylim()), cy)
+    default_center = registry.render_spec(S("stores", "map", options={"zoom": 2}), data, cfg).axes[
+        0
+    ]
+    assert np.isclose(np.mean(default_center.get_xlim()), np.mean(xs), atol=1e-3)
+
+
+def test_transparent_png_has_alpha(cfg, data, tmp_path):
+    from PIL import Image
+
+    fig = registry.render_spec(EXAMPLES["bar"], data, cfg)
+    solid = registry.export_png(fig, tmp_path / "solid.png", 60)
+    clear = registry.export_png(fig, tmp_path / "clear.png", 60, transparent=True)
+    assert Image.open(solid).convert("RGBA").getpixel((2, 2))[3] == 255
+    assert Image.open(clear).convert("RGBA").getpixel((2, 2))[3] == 0
+    assert registry.to_png_bytes(fig, 60, True)[:4] == b"\x89PNG"
+
+
+def test_cli_transparent_flag(tmp_path):
+    from PIL import Image
+
+    from tobacco_inspect.cli import main
+
+    assert main(["viz", "--names", "coverage_funnel", "--out", str(tmp_path), "--transparent"]) == 0
+    assert Image.open(tmp_path / "coverage_funnel.png").convert("RGBA").getpixel((2, 2))[3] == 0

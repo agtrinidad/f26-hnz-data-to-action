@@ -112,29 +112,36 @@ def table(name: str, data: dict[str, Any], config: Config, **params: Any) -> pd.
     return spec.table(data, config, **_params(spec, params)) if spec.table else None
 
 
-def to_png_bytes(fig: Figure, dpi: int) -> bytes:
+def to_png_bytes(fig: Figure, dpi: int, transparent: bool = False) -> bytes:
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=dpi)
+    fig.savefig(buf, format="png", dpi=dpi, transparent=transparent)
     return buf.getvalue()
 
 
-def export_png(fig: Figure, path: Path, dpi: int) -> Path:
+def export_png(fig: Figure, path: Path, dpi: int, transparent: bool = False) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(path, format="png", dpi=dpi)
+    fig.savefig(path, format="png", dpi=dpi, transparent=transparent)
     return path
 
 
 def export_all(
-    data: dict[str, Any], config: Config, out_dir: Path, names: list[str] | None = None
+    data: dict[str, Any],
+    config: Config,
+    out_dir: Path,
+    names: list[str] | None = None,
+    transparent: bool | None = None,
 ) -> list[Path]:
     """Render and save every available (or the named) figure; returns the written paths."""
     dpi = int(config.raw["viz"]["dpi"])
+    if transparent is None:
+        transparent = bool(config.raw["viz"].get("transparent", False))
     written = []
     for name in names or list(FIGURES):
         if name not in FIGURES:
             raise KeyError(f"unknown figure {name!r}; known: {sorted(FIGURES)}")
         if not available(name, data):
             continue
-        written.append(export_png(render(name, data, config), Path(out_dir) / f"{name}.png", dpi))
+        fig = render(name, data, config)
+        written.append(export_png(fig, Path(out_dir) / f"{name}.png", dpi, transparent))
     return written

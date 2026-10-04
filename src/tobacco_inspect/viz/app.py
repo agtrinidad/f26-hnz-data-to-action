@@ -25,6 +25,12 @@ def main() -> None:
     dpi = st.sidebar.select_slider(
         "PNG resolution (dpi)", [150, 200, 300, 450, 600], int(cfg.raw["viz"]["dpi"])
     )
+    st.sidebar.checkbox(
+        "Transparent PNG background",
+        key="png-transparent",
+        value=bool(cfg.raw["viz"].get("transparent", False)),
+        help="Applies to downloads. The preview here always shows a white page.",
+    )
     PAGES[page](cfg, data, dpi)
 
 

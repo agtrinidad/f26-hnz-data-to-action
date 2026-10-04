@@ -33,6 +33,9 @@ def build_parser() -> argparse.ArgumentParser:
             cmd.add_argument("--names", help="comma-separated figure names (default: all)")
             cmd.add_argument("--out", help="output directory (default: paths.figures)")
             cmd.add_argument(
+                "--transparent", action="store_true", default=None, help="transparent background"
+            )
+            cmd.add_argument(
                 "--spec", nargs="+", help="chart spec JSON file(s) saved from the dashboard Builder"
             )
     return parser
@@ -103,9 +106,11 @@ def main(argv: list[str] | None = None) -> int:
         names = args.names.split(",") if args.names else None
         out = Path(args.out) if args.out else None
         if args.spec:
-            written = pipeline.figures_from_specs(config, [Path(p) for p in args.spec], out)
+            written = pipeline.figures_from_specs(
+                config, [Path(p) for p in args.spec], out, args.transparent
+            )
         else:
-            written = pipeline.figures(config, names, out)
+            written = pipeline.figures(config, names, out, transparent=args.transparent)
         print(f"wrote {len(written)} figures to {written[0].parent if written else '(none)'}")
         return 0
     if args.command == "dashboard":

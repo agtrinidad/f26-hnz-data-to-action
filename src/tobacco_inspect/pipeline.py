@@ -680,7 +680,7 @@ def valuation(config, write: bool = True, n_scale: float = 1.0) -> dict:
     return out
 
 
-def figures(config, names=None, out_dir=None, write=True):
+def figures(config, names=None, out_dir=None, write=True, transparent=None):
     """Render the report figures; with `write`, save PNGs to `out_dir` (default paths.figures)."""
     from tobacco_inspect import viz
     from tobacco_inspect.viz.data import load_viz_data
@@ -688,10 +688,10 @@ def figures(config, names=None, out_dir=None, write=True):
     data = load_viz_data(config)
     if not write:
         return {n: viz.render(n, data, config) for n in (names or viz.FIGURES)}
-    return viz.export_all(data, config, out_dir or config.path("figures"), names)
+    return viz.export_all(data, config, out_dir or config.path("figures"), names, transparent)
 
 
-def figures_from_specs(config, spec_paths, out_dir=None):
+def figures_from_specs(config, spec_paths, out_dir=None, transparent=None):
     """Render chart-builder spec JSON files (saved from the dashboard) to PNGs."""
     from tobacco_inspect import viz
     from tobacco_inspect.viz.data import load_viz_data
@@ -701,11 +701,14 @@ def figures_from_specs(config, spec_paths, out_dir=None):
     data = load_viz_data(config)
     out_dir = out_dir or config.path("figures")
     dpi = int(config.raw["viz"]["dpi"])
+    if transparent is None:
+        transparent = bool(config.raw["viz"].get("transparent", False))
     return [
         export_png(
             viz.render_spec(ChartSpec.from_json(Path(p).read_text(encoding="utf-8")), data, config),
             Path(out_dir) / f"{Path(p).stem}.png",
             dpi,
+            transparent,
         )
         for p in spec_paths
     ]

@@ -8,7 +8,7 @@ import zipfile
 import streamlit as st
 
 from tobacco_inspect.viz import registry
-from tobacco_inspect.viz.ui.common import download_buttons, text_editor
+from tobacco_inspect.viz.ui.common import download_buttons, text_editor, transparent
 
 
 def page(cfg, data, dpi: int) -> None:
@@ -43,7 +43,7 @@ def page(cfg, data, dpi: int) -> None:
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w") as zf:
             for name, fig in rendered.items():
-                zf.writestr(f"{name}.png", registry.to_png_bytes(fig, dpi))
+                zf.writestr(f"{name}.png", registry.to_png_bytes(fig, dpi, transparent()))
         st.sidebar.download_button(
             f"Download this section (zip, {len(rendered)} PNGs)",
             buf.getvalue(),
