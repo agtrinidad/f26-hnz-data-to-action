@@ -49,3 +49,6 @@ The notebook `notebooks/02_risk_and_schedule.ipynb` rebuilds with `uv run python
 `docs/process/03_Implementation_Notebook_Executed.html`. Set `FULL = True` in the notebook to rerun the slow experiments (about 15 minutes).
 Update the Synar report each spring (new PDF into `data/pdf/`, transcribe tables in `data/synar.py`, a second person checks them).
 Public Gurobi pip license is size-limited; the code falls back to HiGHS automatically for larger models.
+
+## Figures and dashboard
+`uv sync --extra viz`, then `uv run tobacco-inspect viz` (PNG to `outputs/figures`) or `uv run tobacco-inspect dashboard`. Re-run `viz` after any pipeline step to refresh report copies in `docs/deliverable/figures`. Map figures need tract polygons from `refresh`; without them they are skipped.

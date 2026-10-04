@@ -57,6 +57,15 @@ uv run tobacco-inspect regime     # budget-capped vs census comparison
 uv run tobacco-inspect value      # marginal cost and break-even analysis
 ```
 
+Report figures (styled after the class deck) and the dashboard need the `viz` extra:
+
+```bash
+uv sync --extra viz
+uv run tobacco-inspect viz                       # all figures -> outputs/figures/*.png
+uv run tobacco-inspect viz --names map_clusters,top_stores --out docs/deliverable/figures
+uv run tobacco-inspect dashboard                 # Streamlit: every figure with PNG/CSV download
+```
+
 **Solver.** Gurobi is the primary solver. `gurobipy` from PyPI has a size-limited license that covers
 small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`; never commit
 `gurobi.lic`). To run without Gurobi, `uv sync --extra fallback` and set `solver: appsi_highs` in
@@ -79,7 +88,7 @@ small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`;
 
 | Path | Contents |
 |---|---|
-| `src/tobacco_inspect/` | Package: `data/` (ingest, features), `model/` (risk, Thompson, orienteering), `routing/`, `eval/` (backtest, census, regime, valuation), `pipeline.py`, `cli.py` |
+| `src/tobacco_inspect/` | Package: `data/` (ingest, features), `model/` (risk, Thompson, orienteering), `routing/`, `eval/` (backtest, census, regime, valuation, geo clusters), `viz/` (figure registry, dashboard), `pipeline.py`, `cli.py` |
 | `config/default.yaml` | Budget, capacity, solver, prize weights, assumptions (edit here, not in code) |
 | `data/` | `raw/` (git-ignored), `interim/`, `processed/`, `pdf/` |
 | `outputs/` | Schedules, route sheets, simulations, valuation tables (small CSV/JSON) |

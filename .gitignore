@@ -43,3 +43,6 @@ cache/
 docs/*.html
 docs/*_files/
 docs/deliverable/**/*.html
+
+# Generated figures
+outputs/figures/

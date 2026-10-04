@@ -17,6 +17,8 @@ COMMANDS = {
     "census": "scenario: check every retail location once in a year (cost, portioning, capture)",
     "regime": "scenario: budget-capped vs census-floor regime (frontier, second pass, response)",
     "value": "scenario: marginal cost, break-even deterrence, opportunity cost, what-ifs (memo 07)",
+    "viz": "export report figures as PNG (--names a,b to pick; --out DIR)",
+    "dashboard": "launch the Streamlit dashboard (needs the 'viz' extra)",
 }
 
 
@@ -26,7 +28,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--config", help="path to a YAML config (default: config/default.yaml)")
     sub = parser.add_subparsers(dest="command", required=True)
     for name, helptext in COMMANDS.items():
-        sub.add_parser(name, help=helptext)
+        cmd = sub.add_parser(name, help=helptext)
+        if name == "viz":
+            cmd.add_argument("--names", help="comma-separated figure names (default: all)")
+            cmd.add_argument("--out", help="output directory (default: paths.figures)")
     return parser
 
 
@@ -87,6 +92,22 @@ def main(argv: list[str] | None = None) -> int:
         print(res["break_even"].to_string(index=False))
         print("valuation outputs written to outputs/valuation_*.csv")
         return 0
+    if args.command == "viz":
+        from pathlib import Path
+
+        from tobacco_inspect import pipeline
+
+        names = args.names.split(",") if args.names else None
+        written = pipeline.figures(config, names, Path(args.out) if args.out else None)
+        print(f"wrote {len(written)} figures to {written[0].parent if written else '(none)'}")
+        return 0
+    if args.command == "dashboard":
+        import subprocess
+        from pathlib import Path
+
+        app = Path(__file__).parent / "viz" / "app.py"
+        cfg = ["--", "--config", args.config] if args.config else []
+        return subprocess.call([sys.executable, "-m", "streamlit", "run", str(app), *cfg])
     print(f"'{args.command}' is not implemented yet (scaffold only).", file=sys.stderr)
     return 1
 

@@ -99,8 +99,26 @@ data:                     # source locations and vintages (see docs/data-sources
   acs_source: censusreporter    # censusreporter (keyless) | census_api (needs CENSUS_API_KEY)
   school_radii_m: [300, 1000]
 
+viz:                      # report figures and dashboard (ADR 0009); styled after the class deck
+  dpi: 300
+  figsize: [10.0, 5.6]    # 16:9-ish, matches slide content area
+  font: [Open Sans, Segoe UI, DejaVu Sans]   # first installed family wins
+  palette:
+    ink: "#1A1A1A"        # headings, primary marks
+    muted: "#6B6F76"      # subtitles, axes, secondary marks
+    rule: "#D9DADD"       # gridlines and panel borders
+    red: "#C41230"        # Heinz red, the one accent
+    coral: "#E03C31"      # hero numbers
+    blue: "#00548F"       # secondary series
+  geo:
+    eps_m: 400            # ASSUMED: DBSCAN neighbourhood radius (about a 5-minute walk)
+    min_samples: 4        # ASSUMED: stores needed to call a cluster
+    unobserved_flag: 0.5  # clusters with at least this share of never-checked stores are flagged
+  top_n: 15
+
 paths:                    # always relative to the repository root
   raw: data/raw
   interim: data/interim
   processed: data/processed
   outputs: outputs
+  figures: outputs/figures   # PNG exports (gitignored); final report PNGs go to docs/deliverable/figures

@@ -677,3 +677,14 @@ def valuation(config, write: bool = True, n_scale: float = 1.0) -> dict:
         for key in ("marginal", "break_even", "opportunity", "whatif", "robustness", "restated"):
             out[key].to_csv(outdir / f"valuation_{key}.csv", index=False)
     return out
+
+
+def figures(config, names=None, out_dir=None, write=True):
+    """Render the report figures; with `write`, save PNGs to `out_dir` (default paths.figures)."""
+    from tobacco_inspect import viz
+    from tobacco_inspect.viz.data import load_viz_data
+
+    data = load_viz_data(config)
+    if not write:
+        return {n: viz.render(n, data, config) for n in (names or viz.FIGURES)}
+    return viz.export_all(data, config, out_dir or config.path("figures"), names)
