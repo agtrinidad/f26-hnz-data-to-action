@@ -96,6 +96,17 @@ def render(
         return spec.fn(data, config, **_params(spec, params))
 
 
+def render_spec(
+    spec, data: dict[str, Any], config: Config, text: dict[str, str] | None = None
+) -> Figure:
+    """Render a builder ChartSpec; `text` (title/subtitle/source) wins over `spec.text`."""
+    from tobacco_inspect.viz.build import build
+    from tobacco_inspect.viz.theme import text_overrides
+
+    with text_overrides(text):
+        return build(spec, data, config)
+
+
 def table(name: str, data: dict[str, Any], config: Config, **params: Any) -> pd.DataFrame | None:
     spec = FIGURES[name]
     return spec.table(data, config, **_params(spec, params)) if spec.table else None

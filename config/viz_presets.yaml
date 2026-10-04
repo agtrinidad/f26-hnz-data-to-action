@@ -1,0 +1,51 @@
+# Gallery presets: each is a chart-builder spec (see docs/runbook.md "Add a preset").
+# Build a chart in the dashboard's Builder tab, download its spec JSON, and paste it under `spec`.
+presets:
+  prize_distribution:
+    section: Risk
+    title: Distribution of store prize r_i
+    spec:
+      dataset: licenses
+      kind: hist
+      x: prize
+      color: fda_history
+      options: {bins: 30}
+      text:
+        title: Risk is concentrated in a minority of stores
+  prize_by_outlet:
+    section: Risk
+    title: Mean prize by outlet type
+    spec:
+      dataset: stores
+      kind: bar
+      x: outlet_type
+      y: prize
+      agg: mean
+      sort: desc
+  risk_concentration:
+    section: Risk
+    title: How concentrated is risk?
+    spec:
+      dataset: stores
+      kind: concentration
+      x: prize
+      options: {top_share: 0.1}
+  prize_vs_poverty:
+    section: Risk
+    title: Prize vs. tract poverty
+    spec:
+      dataset: stores
+      kind: scatter
+      x: acs_poverty_rate
+      y: prize
+      color: fda_history
+      options: {trend: true}
+  map_density:
+    section: Geography
+    title: Prize density
+    spec:
+      dataset: stores
+      kind: map
+      color: prize
+      agg: sum
+      options: {map_mode: density}

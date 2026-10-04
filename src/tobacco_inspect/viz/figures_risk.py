@@ -17,42 +17,6 @@ def _lam(config) -> float:
     return float(config.prize["lambda_deterrence"])
 
 
-@figure("prize_distribution", "Risk", "Distribution of store prize r_i", needs=("risk",))
-def prize_distribution(data, config):
-    pal = palette(config)
-    r = data["risk"]
-    fig = new_figure(config)
-    ax = fig.subplots()
-    for observed, color, label in (
-        (False, pal["muted"], "No FDA history"),
-        (True, pal["red"], "FDA history"),
-    ):
-        ax.hist(
-            r.loc[r["fda_observed"] == observed, "prize"],
-            bins=30,
-            alpha=0.8,
-            color=color,
-            label=label,
-        )
-    ax.axvline(r["prize"].median(), color=pal["ink"], ls="--", lw=1)
-    ax.text(r["prize"].median(), ax.get_ylim()[1] * 0.95, " median", fontsize=9)
-    ax.set_xlabel("Prize r_i")
-    ax.set_ylabel("Licenses")
-    ax.legend()
-    return titled(
-        fig,
-        config,
-        "Risk is concentrated in a minority of stores",
-        f"Prize across {len(r)} active licenses; {r['fda_observed'].mean():.0%} have FDA history",
-        SRC,
-    )
-
-
-attach_table("prize_distribution")(
-    lambda data, config: data["risk"][["license_id", "prize", "fda_observed"]]
-)
-
-
 def _decomp(data, config, top_n) -> pd.DataFrame:
     r = data["risk"].nlargest(int(top_n), "prize").copy()
     r["h_x_p"] = r["h"] * r["p"]

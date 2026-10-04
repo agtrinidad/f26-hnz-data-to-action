@@ -52,3 +52,17 @@ Public Gurobi pip license is size-limited; the code falls back to HiGHS automati
 
 ## Figures and dashboard
 `uv sync --extra viz`, then `uv run tobacco-inspect viz` (PNG to `outputs/figures`) or `uv run tobacco-inspect dashboard`. Re-run `viz` after any pipeline step to refresh report copies in `docs/deliverable/figures`. Map figures need tract polygons from `refresh`; without them they are skipped.
+
+### Extending the chart builder
+Three extension points, each small:
+- **Dataset** (a table the Builder can chart): in `viz/datasets.py`, add
+  `@dataset("name", "Label", "one row per ...", needs=("loaded_key",))` on a function
+  `fn(data, config) -> DataFrame`. Column roles are inferred; add readable names under `viz.columns`
+  in `config/default.yaml`.
+- **Chart kind**: in `viz/charts.py`, write `compute(df, spec, config)` and
+  `draw(plot, spec, config, ctx)` (finish with `finish(...)` so the deck style and text overrides
+  apply), then register `KINDS["name"] = ChartKind(label, fields, compute, draw, options=...)`.
+  Facets come free if you draw through `panels()`. The Builder form is generated from `fields` and
+  `options`, so there is no UI code to write.
+- **Preset** (a Gallery figure): build the chart in the Builder, download the spec JSON, and paste
+  it under `spec:` in `config/viz_presets.yaml` with a `section` and `title`.

@@ -19,7 +19,7 @@ def _locations(data) -> pd.DataFrame:
     return geo.one_row_per_location(r[r["retail_license"]])
 
 
-def _base(ax, data, pal, fill: pd.Series | None = None, cmap: str = "Reds", label: str = ""):
+def base_map(ax, data, pal, fill: pd.Series | None = None, cmap: str = "Reds", label: str = ""):
     """Tract outlines (optionally shaded by `fill`, indexed by tract_geoid); equal-ish aspect."""
     tr = data.get("tracts")
     if tr is not None:
@@ -48,7 +48,7 @@ def map_prize(data, config):
     loc = _locations(data).sort_values("prize")
     fig = new_figure(config)
     ax = fig.subplots()
-    _base(ax, data, pal)
+    base_map(ax, data, pal)
     sc = ax.scatter(loc["lon"], loc["lat"], c=loc["prize"], cmap="Reds", s=28 + 220 * loc["prize"],
                     edgecolor=pal["ink"], linewidth=0.3, alpha=0.9)  # fmt: skip
     fig.colorbar(sc, ax=ax, shrink=0.6, label="Prize r_i")
@@ -93,7 +93,7 @@ def map_clusters(data, config, eps_m, min_samples):
     hot = _clusters(data, config, eps_m, min_samples)
     fig = new_figure(config)
     ax = fig.subplots()
-    _base(ax, data, pal)
+    base_map(ax, data, pal)
     noise = loc[loc["cluster"] < 0]
     ax.scatter(noise["lon"], noise["lat"], s=14, color=pal["muted"], alpha=0.5)
     clustered = loc[loc["cluster"] >= 0]
@@ -179,7 +179,7 @@ def map_tract_prize(data, config):
     t = _tract_density(data, config).set_index("tract_geoid")
     fig = new_figure(config)
     ax = fig.subplots()
-    _base(ax, data, pal, fill=t["prize_sum"], cmap="Reds", label="Summed prize")
+    base_map(ax, data, pal, fill=t["prize_sum"], cmap="Reds", label="Summed prize")
     return titled(
         fig, config, "Risk mass is concentrated in a handful of tracts",
         "Summed store prize by census tract (retail locations only)", SRC,
@@ -195,7 +195,7 @@ def map_observed(data, config):
     loc = _locations(data)
     fig = new_figure(config)
     ax = fig.subplots()
-    _base(ax, data, pal)
+    base_map(ax, data, pal)
     for observed, color, label in (
         (False, pal["muted"], "No FDA history"),
         (True, pal["red"], "FDA history"),

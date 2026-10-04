@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import warnings
 from collections.abc import Iterator
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -25,6 +26,10 @@ def text_overrides(overrides: dict[str, str] | None) -> Iterator[None]:
         yield
     finally:
         _TEXT_OVERRIDES.reset(token)
+
+
+def current_overrides() -> dict[str, str]:
+    return dict(_TEXT_OVERRIDES.get() or {})
 
 
 def palette(config: Config) -> dict[str, str]:
@@ -80,5 +85,9 @@ def titled(fig: Figure, config: Config, title: str, subtitle: str = "", source: 
     )
     if source:
         fig.text(0.04, 0.03, source, fontsize=7.5, color=pal["muted"], va="center")
-    fig.tight_layout(rect=(0.02, 0.09, 0.98, 0.84))  # fits tick labels; header/footer sit outside
+    with warnings.catch_warnings():  # colorbars on facet grids are not tight_layout-aware
+        warnings.simplefilter("ignore", UserWarning)
+        fig.tight_layout(
+            rect=(0.02, 0.09, 0.98, 0.84)
+        )  # fits tick labels; header/footer sit outside
     return fig

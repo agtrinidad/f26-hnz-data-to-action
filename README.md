@@ -63,8 +63,14 @@ Report figures (styled after the class deck) and the dashboard need the `viz` ex
 uv sync --extra viz
 uv run tobacco-inspect viz                       # all figures -> outputs/figures/*.png
 uv run tobacco-inspect viz --names map_clusters,top_stores --out docs/deliverable/figures
-uv run tobacco-inspect dashboard                 # Streamlit: every figure with PNG/CSV download
+uv run tobacco-inspect dashboard                 # Streamlit: Gallery + Builder
+uv run tobacco-inspect viz --spec my_chart.json  # re-render a chart saved from the Builder
 ```
+
+The dashboard has two modes. **Gallery** shows the curated figures and presets
+(`config/viz_presets.yaml`). **Builder** constructs a chart from any dataset: bar, line, scatter,
+histogram, box, heatmap, concentration curve, map (points, tract choropleth, density), KPI tiles
+or ranked table, with filters, facets, editable text, and PNG, CSV and spec-JSON downloads.
 
 **Solver.** Gurobi is the primary solver. `gurobipy` from PyPI has a size-limited license that covers
 small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`; never commit

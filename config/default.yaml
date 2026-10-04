@@ -115,6 +115,33 @@ viz:                      # report figures and dashboard (ADR 0009); styled afte
     min_samples: 4        # ASSUMED: stores needed to call a cluster
     unobserved_flag: 0.5  # clusters with at least this share of never-checked stores are flagged
   top_n: 15
+  columns:                # display names for builder fields (anything missing is auto-capitalized)
+    p: Violation probability (p)
+    h: Exposure (h)
+    prize: Prize (r)
+    deterrence: Follow-up term (Δ)
+    fda_observed: Has FDA history
+    fda_history: FDA history
+    outlet_type: Outlet type
+    trade_name: Store
+    acs_poverty_rate: Tract poverty rate
+    acs_youth_share: Tract youth share
+    school_nearest_m: Distance to nearest school (m)
+    school_within_1000m: Schools within 1 km
+    n_prior_checks: Prior FDA checks
+    n_prior_viol: Prior violations
+    days_since_check: Days since last check
+    prize_rank: Prize rank
+    prize_sum: Summed prize
+    prize_mean: Mean prize
+    poverty_rate: Tract poverty rate
+    youth_share: Tract youth share
+    tract_geoid: Census tract
+    found_per_cycle: Violations found per cycle
+    distinct_violators: Distinct violators
+    dollars_per_incremental_violator: Cost per added violator ($)
+    violation: Violation (1 = yes)
+    year: Year
 
 paths:                    # always relative to the repository root
   raw: data/raw

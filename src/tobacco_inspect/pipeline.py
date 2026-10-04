@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from datetime import date
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -688,3 +689,23 @@ def figures(config, names=None, out_dir=None, write=True):
     if not write:
         return {n: viz.render(n, data, config) for n in (names or viz.FIGURES)}
     return viz.export_all(data, config, out_dir or config.path("figures"), names)
+
+
+def figures_from_specs(config, spec_paths, out_dir=None):
+    """Render chart-builder spec JSON files (saved from the dashboard) to PNGs."""
+    from tobacco_inspect import viz
+    from tobacco_inspect.viz.data import load_viz_data
+    from tobacco_inspect.viz.registry import export_png
+    from tobacco_inspect.viz.spec import ChartSpec
+
+    data = load_viz_data(config)
+    out_dir = out_dir or config.path("figures")
+    dpi = int(config.raw["viz"]["dpi"])
+    return [
+        export_png(
+            viz.render_spec(ChartSpec.from_json(Path(p).read_text(encoding="utf-8")), data, config),
+            Path(out_dir) / f"{Path(p).stem}.png",
+            dpi,
+        )
+        for p in spec_paths
+    ]
