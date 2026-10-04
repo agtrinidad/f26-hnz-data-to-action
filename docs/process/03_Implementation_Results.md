@@ -134,7 +134,7 @@ Random draw, prior-violators-first, FDA's follow-up rule (re-inspect violators w
 violations, violations per inspector-hour, share of visits in high-exposure areas, unpredictability across cycles, cost per detected violation.
 
 ### 3.10 Equity audit (`eval/equity.py`)
-Stores are scored without demographics. The audit then checks where inspections land by census tract and whether coverage tracks tract poverty.
+Stores are scored without demographics. The audit then checks where inspections land by census tract whether coverage tracks tract poverty, and whether majority-minority tracts (more than half of residents not non-Hispanic White, ACS B03002) get more checks per store than other tracts. In the 12-visit schedule, the 27 majority-minority tracts hold 25.2% of stores and receive 20.0% of visits (0.73 checks per store relative to other tracts; coverage-minority correlation 0.01), so there is no sign of over-enforcement. With 12 visits in 9 of 94 tracts this is a count-limited, indicative result.
 
 ### 3.11 Outputs and checks
 `data/processed/risk_scores.csv`; `outputs/` holds the backtest, model summary, schedule, reasons, equity files, Gate B sweep and simulations.

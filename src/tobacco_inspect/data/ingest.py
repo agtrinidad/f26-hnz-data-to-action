@@ -173,7 +173,7 @@ def read_zipped_shapefile(path: Path, bbox: tuple[float, float, float, float] | 
     return gpd.read_file(f"zip://{Path(path).as_posix()}!{shp[0]}", bbox=bbox)
 
 
-_ACS_TABLES = ["B01001", "B17001"]
+_ACS_TABLES = ["B01001", "B17001", "B03002"]
 
 
 def fetch_acs_tracts(raw_dir: Path, state_fips: str, county_fips: str) -> Path:
@@ -182,7 +182,8 @@ def fetch_acs_tracts(raw_dir: Path, state_fips: str, county_fips: str) -> Path:
     Census Reporter serves the Census Bureau's ACS tables without an API key and includes the
     margin of error per estimate. The release (vintage) is recorded in the output JSON.
     """
-    dest = Path(raw_dir) / f"acs5_latest_{state_fips}{county_fips}_tracts.json"
+    # _v2: adds B03002 (race/ethnicity); the older cache lacks it and download() would reuse it
+    dest = Path(raw_dir) / f"acs5_latest_{state_fips}{county_fips}_tracts_v2.json"
     geo = f"140|05000US{state_fips}{county_fips}"
     return download(
         "https://api.censusreporter.org/1.0/data/show/latest",

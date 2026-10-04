@@ -94,6 +94,7 @@ def _decorate(df: pd.DataFrame, data) -> pd.DataFrame:
             for c in (
                 "acs_poverty_rate",
                 "acs_youth_share",
+                "acs_minority_share",
                 "school_nearest_m",
                 "school_within_1000m",
                 "chain_flag",
@@ -121,7 +122,14 @@ def _ds_tracts(data, config):
     t = geo.tract_summary(_stores(data, config))
     cov = data.get("coverage_by_tract")
     if cov is not None:
-        keep = ["tract_geoid", "poverty_rate", "youth_share", "inspections", "stores_inspected"]
+        keep = [
+            "tract_geoid",
+            "poverty_rate",
+            "youth_share",
+            "minority_share",
+            "inspections",
+            "stores_inspected",
+        ]
         t = t.merge(cov[[c for c in keep if c in cov.columns]], on="tract_geoid", how="left")
     return t
 

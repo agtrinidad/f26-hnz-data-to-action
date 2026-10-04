@@ -149,6 +149,60 @@ def equity_regimes(data, config):
 attach_table("equity_regimes")(_equity)
 
 
+def _equity_race(data, config) -> pd.DataFrame:
+    return data["regime_equity"][
+        [
+            "regime",
+            "share_retailers_majority_minority",
+            "share_inspections_majority_minority",
+            "majority_minority_coverage_ratio",
+        ]
+    ].copy()
+
+
+@figure(
+    "equity_regimes_race",
+    "Policy",
+    "Checks in majority-minority tracts vs. where stores are",
+    needs=("regime_equity",),
+)
+def equity_regimes_race(data, config):
+    pal = palette(config)
+    t = _equity_race(data, config)
+    fig = new_figure(config)
+    ax = fig.subplots()
+    x = range(len(t))
+    w = 0.34
+    ret, ins = t["share_retailers_majority_minority"], t["share_inspections_majority_minority"]
+    ax.bar([i - w / 2 for i in x], ret, w, color=pal["muted"], label="Share of retailers")
+    ax.bar([i + w / 2 for i in x], ins, w, color=pal["red"], label="Share of expected checks")
+    for i, (a, b) in enumerate(zip(ret, ins, strict=True)):
+        ax.text(i - w / 2, a + 0.004, f"{a:.0%}", ha="center", fontsize=10)
+        ax.text(i + w / 2, b + 0.004, f"{b:.0%}", ha="center", fontsize=10, fontweight="bold")
+    ax.set_xticks(list(x), t["regime"])
+    ax.set_ylabel("In majority-minority tracts")
+    ax.yaxis.set_major_formatter(lambda v, _: f"{v:.0%}")
+    ax.grid(axis="x", visible=False)
+    ax.legend(loc="upper right")
+    worst = t["majority_minority_coverage_ratio"].max()
+    title = (
+        "Majority-minority tracts get more checks per store under the capped plan"
+        if worst > 1.1
+        else "Neither regime concentrates checks in majority-minority tracts"
+    )
+    return titled(
+        fig,
+        config,
+        title,
+        "Share of expected checks vs. share of retailers in tracts where over half of residents "
+        "are not non-Hispanic White",
+        SRC,
+    )
+
+
+attach_table("equity_regimes_race")(_equity_race)
+
+
 def _sim(data, config) -> pd.DataFrame:
     s = data["simulation_policies"]
     cell = s.sort_values(["delta", "rho"]).iloc[-1][

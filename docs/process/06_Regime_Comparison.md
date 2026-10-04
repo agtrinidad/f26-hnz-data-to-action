@@ -95,6 +95,7 @@ Reduction is the fall in the city's mean violation probability versus no enforce
 
 ### 3.5 Who is checked (`outputs/regime_equity.csv`)
 - Budget-capped: about 86% of stores unchecked in a year; 26.0% of checks in the highest-poverty quartile, which holds 21.7% of stores.
+- Majority-minority tracts (27 of 94; 25.2% of stores): the capped regime sends 32.2% of expected checks there, 1.39 times the per-store rate of other tracts; the census floor sends 26.6%, a ratio of 1.07. The capped skew comes from the risk score, which uses no demographics but favors outlet types and school-adjacent areas that correlate with these tracts. Descriptive only; this does not show that the checks are unwarranted.
 - Census floor: every store checked; 22.4% of checks in that quartile. (ACS poverty has wide margins; 42% of retail licenses sit in tracts with unreliable youth data, so gaps are indicative.)
 
 ## 4. Decisions made, with the alternatives rejected

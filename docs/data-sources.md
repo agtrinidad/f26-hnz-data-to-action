@@ -51,8 +51,8 @@ confirmed (missing author, title, date or DOI) and need a check before citing in
 **U.S. Census Bureau.** (n.d.). *Census Geocoder* [Web service, benchmark Public_AR_Current]. https://geocoding.geo.census.gov/geocoder/
 - Cache: `data/interim/geocode_cache.csv`. Role: coordinates for FDA addresses and 23 licenses without coordinates.
 
-**U.S. Census Bureau.** (2026). *American Community Survey 5-year estimates, 2020-2024, tables B01001 (sex by age) and B17001 (poverty status by sex and age), Allegheny County census tracts* [Data set]. Retrieved through Census Reporter. https://censusreporter.org/ (API: `https://api.censusreporter.org/1.0/data/show/latest`) **[verify release year]**
-- Local file: `data/raw/acs5_latest_42003_tracts.json` (release recorded in the file as `acs2024_5yr`). Role: tract youth share and poverty, with margins of error.
+**U.S. Census Bureau.** (2026). *American Community Survey 5-year estimates, 2020-2024, tables B01001 (sex by age), B17001 (poverty status by sex and age) and B03002 (Hispanic or Latino origin by race), Allegheny County census tracts* [Data set]. Retrieved through Census Reporter. https://censusreporter.org/ (API: `https://api.censusreporter.org/1.0/data/show/latest`) **[verify release year]**
+- Local file: `data/raw/acs5_latest_42003_tracts_v2.json` (release recorded in the file as `acs2024_5yr`). Role: tract youth share, poverty and minority share (not non-Hispanic White), with margins of error. Used only in the equity audit, never in scoring.
 
 **National Center for Education Statistics.** (n.d.). *Education Demographic and Geographic Estimates (EDGE): Public school geocodes, 2023-2024* [Data set]. U.S. Department of Education. https://nces.ed.gov/programs/edge/data/EDGE_GEOCODE_PUBLICSCH_2324.zip
 - Local file: `data/raw/EDGE_GEOCODE_PUBLICSCH_2324.zip` (256 schools near Pittsburgh).
@@ -126,7 +126,7 @@ Stackelberg security games (lecture notes cited in the project plan): https://we
 | FDA OCE compliance checks | `data/raw/OCE_FY*.zip` | `oce_pa_checks.csv.gz`, `fda_city_checks.csv.gz`, backtest |
 | FDA data dashboard (PA) | `data/raw/fda-pa-*.xlsx` | `pa_tobacco_warning_letters_by_year.csv` |
 | Census boundaries, geocoder | `data/raw/boundaries/`, geocoder cache | tract and city flags |
-| ACS 2020-2024 | `data/raw/acs5_latest_42003_tracts.json` | `acs_tracts.csv`, youth share, poverty |
+| ACS 2020-2024 | `data/raw/acs5_latest_42003_tracts_v2.json` | `acs_tracts.csv`, youth share, poverty, minority share |
 | NCES public and private schools | `data/raw/EDGE_GEOCODE_*.zip` | `schools_pgh.csv`, exposure h_i |
 | OpenStreetMap | `data/interim/youth_sites.csv`, drive network cache | exposure h_i, `travel_time_matrix_<hash>.csv.gz` |
 

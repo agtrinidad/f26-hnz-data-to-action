@@ -1,3 +1,3 @@
-regime,expected_checks,tracts,tracts_with_inspection,share_retailers_high_poverty,share_inspections_high_poverty,corr_coverage_poverty,share_stores_never_checked
-budget-capped,48.0,94,94,0.21739130434782608,0.25989583333333316,0.09828879577072878,0.8608695652173913
-census floor + 2nd pass,430.99999999999966,94,94,0.21739130434782608,0.22412993039443158,0.12054522626131502,7.079683055580708e-17
+regime,expected_checks,tracts,tracts_with_inspection,share_retailers_high_poverty,share_inspections_high_poverty,corr_coverage_poverty,tracts_majority_minority,share_retailers_majority_minority,share_inspections_majority_minority,inspections_per_retailer_majority_minority,inspections_per_retailer_other,majority_minority_coverage_ratio,corr_coverage_minority,share_stores_never_checked
+budget-capped,48.0,94,94,0.21739130434782608,0.25989583333333316,0.09828879577072878,27,0.25217391304347825,0.3215277777777777,0.17739463601532565,0.12725490196078432,1.3940102367922353,0.11638065814030894,0.8608695652173913
+census floor + 2nd pass,430.99999999999966,94,94,0.21739130434782608,0.22412993039443158,0.12054522626131502,27,0.25217391304347825,0.26575792730085074,1.3165708812260524,1.227418300653594,1.0726342278952377,0.26049523273482356,7.079683055580708e-17

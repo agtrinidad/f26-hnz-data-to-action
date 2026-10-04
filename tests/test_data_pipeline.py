@@ -77,6 +77,10 @@ def test_parse_acs_tracts(tmp_path):
                     "estimate": {"B17001001": 400, "B17001002": 80},
                     "error": {"B17001001": 20, "B17001002": 15},
                 },
+                "B03002": {
+                    "estimate": {"B03002001": 400, "B03002003": 100},
+                    "error": {"B03002001": 20, "B03002003": 15},
+                },
             }
         },
     }
@@ -89,6 +93,8 @@ def test_parse_acs_tracts(tmp_path):
     assert row["acs_youth_share"] == pytest.approx(0.2)
     assert row["acs_poverty_rate"] == pytest.approx(0.2)
     assert row["acs_youth_share_moe"] > 0
+    assert row["acs_minority_share"] == pytest.approx(0.75)  # (400 - 100) / 400
+    assert row["acs_minority_share_moe"] > 0
 
 
 def test_geocode_cache_roundtrip(tmp_path, monkeypatch):

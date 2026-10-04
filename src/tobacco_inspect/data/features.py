@@ -113,7 +113,7 @@ def _moe_sum(moes: list[float]) -> float:
 
 
 def parse_acs_tracts(path: Path) -> pd.DataFrame:
-    """Turn the Census Reporter JSON into tract rows with youth share and poverty rate + MOE."""
+    """Turn the Census Reporter JSON into tract rows with youth, poverty and minority shares + MOE."""
     blob = json.loads(Path(path).read_text(encoding="utf-8"))
     rows = []
     male_u18 = ["B01001003", "B01001004", "B01001005", "B01001006"]
@@ -128,6 +128,12 @@ def parse_acs_tracts(path: Path) -> pd.DataFrame:
         pov_n, pov_tot = b17["estimate"]["B17001002"], b17["estimate"]["B17001001"]
         pov_moe, tot_moe = b17["error"]["B17001002"], b17["error"]["B17001001"]
         share = u18 / total if total else np.nan
+        # Minority = everyone but non-Hispanic White alone (B03002003), over the B03002 total.
+        b3 = tables["B03002"]
+        race_tot, race_tot_moe = b3["estimate"]["B03002001"], b3["error"]["B03002001"]
+        nhw, nhw_moe = b3["estimate"]["B03002003"], b3["error"]["B03002003"]
+        minority = race_tot - nhw
+        minority_moe = _moe_sum([race_tot_moe, nhw_moe])
 
         # Census ratio MOE for a proportion (numerator is a subset of the denominator).
         def prop_moe(num, den, num_moe, den_moe):
@@ -151,10 +157,16 @@ def parse_acs_tracts(path: Path) -> pd.DataFrame:
                 "acs_poverty_n": pov_n,
                 "acs_poverty_rate": pov_n / pov_tot if pov_tot else np.nan,
                 "acs_poverty_rate_moe": prop_moe(pov_n, pov_tot, pov_moe, tot_moe),
+                "acs_minority_n": minority,
+                "acs_minority_share": minority / race_tot if race_tot else np.nan,
+                "acs_minority_share_moe": prop_moe(minority, race_tot, minority_moe, race_tot_moe),
             }
         )
     df = pd.DataFrame(rows)
     df["acs_youth_share_unreliable"] = df["acs_youth_share_moe"] > 0.5 * df["acs_youth_share"]
+    df["acs_minority_share_unreliable"] = (
+        df["acs_minority_share_moe"] > 0.5 * df["acs_minority_share"]
+    )
     df["acs_release"] = blob["release"]["name"]
     return df
 

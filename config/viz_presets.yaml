@@ -40,6 +40,16 @@ presets:
       y: prize
       color: fda_history
       options: {trend: true}
+  prize_vs_minority:
+    section: Risk
+    title: Prize vs. tract minority share
+    spec:
+      dataset: stores
+      kind: scatter
+      x: acs_minority_share
+      y: prize
+      color: fda_history
+      options: {trend: true}
   map_density:
     section: Geography
     title: Prize density

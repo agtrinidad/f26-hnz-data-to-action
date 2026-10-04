@@ -168,7 +168,9 @@ def _tract_density(data, config) -> pd.DataFrame:
     cov = data.get("coverage_by_tract")
     if cov is not None:
         t = t.merge(
-            cov[["tract_geoid", "poverty_rate", "youth_share"]], on="tract_geoid", how="left"
+            cov[[c for c in ("tract_geoid", "poverty_rate", "youth_share", "minority_share") if c in cov]],
+            on="tract_geoid",
+            how="left",
         )
     return t
 
@@ -187,6 +189,27 @@ def map_tract_prize(data, config):
 
 
 attach_table("map_tract_prize")(_tract_density)
+
+
+@figure(
+    "map_tract_minority",
+    "Geography",
+    "Tract minority share",
+    needs=("risk", "tracts", "coverage_by_tract"),
+)
+def map_tract_minority(data, config):
+    pal = palette(config)
+    t = _tract_density(data, config).set_index("tract_geoid")
+    fig = new_figure(config)
+    ax = fig.subplots()
+    base_map(ax, data, pal, fill=t["minority_share"], cmap="Purples", label="Minority share")
+    return titled(
+        fig, config, "Majority-minority tracts to compare against where checks land",
+        "Share of residents not non-Hispanic White, by tract (ACS 5-year; wide margins of error)", SRC,
+    )  # fmt: skip
+
+
+attach_table("map_tract_minority")(_tract_density)
 
 
 @figure("map_observed", "Geography", "Observed vs. unobserved stores", needs=("risk",))

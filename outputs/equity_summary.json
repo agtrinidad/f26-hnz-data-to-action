@@ -3,5 +3,12 @@
   "tracts_with_inspection": 9,
   "share_retailers_high_poverty": 0.21739130434782608,
   "share_inspections_high_poverty": 0.2,
-  "corr_coverage_poverty": -0.00962081912929701
+  "corr_coverage_poverty": -0.00962081912929701,
+  "tracts_majority_minority": 27,
+  "share_retailers_majority_minority": 0.25217391304347825,
+  "share_inspections_majority_minority": 0.2,
+  "inspections_per_retailer_majority_minority": 0.022988505747126436,
+  "inspections_per_retailer_other": 0.03137254901960784,
+  "majority_minority_coverage_ratio": 0.7327586206896551,
+  "corr_coverage_minority": 0.007746322935522823
 }
