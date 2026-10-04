@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="outputs/figures/map_observed.png" alt="Map of observed tobacco retailers in Pittsburgh" width="720">
+  <img src="docs/deliverable/figures/map_observed.png" alt="Map of observed tobacco retailers in Pittsburgh" width="720">
 </p>
 
 # Tobacco Retail Inspections in Pittsburgh: Who to Check, When, and at What Cost
