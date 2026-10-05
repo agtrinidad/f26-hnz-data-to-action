@@ -11,6 +11,10 @@ from tobacco_inspect.viz.registry import attach_table, figure
 from tobacco_inspect.viz.theme import new_figure, palette, titled
 
 SRC = "Source: PA Dept. of Revenue licenses (345 retail locations); Census TIGER 2023 tracts; NCES schools."
+# Tract outline is 11.5:1 on white (WCAG AAA); the pale fill keeps >= 4.5:1 against the red (#C41230)
+# and grey (#6B6F76) store dots, which are drawn on top with white edges.
+TRACT_EDGE = "#1F3A5F"
+TRACT_FILL = "#F2F2F3"
 CLUSTER_PARAMS = {"eps_m": (400, 150, 1000, 50), "min_samples": (4, 2, 10, 1)}
 
 
@@ -27,11 +31,11 @@ def base_map(ax, data, pal, fill: pd.Series | None = None, cmap: str = "Reds", l
         tr = tr[tr["tract_geoid"].isin(city["tract_geoid"])]
         if fill is not None:
             tr = tr.assign(_v=tr["tract_geoid"].map(fill))
-            tr.plot(ax=ax, column="_v", cmap=cmap, edgecolor="white", linewidth=0.6,
+            tr.plot(ax=ax, column="_v", cmap=cmap, edgecolor=TRACT_EDGE, linewidth=0.7,
                     legend=True, legend_kwds={"label": label, "shrink": 0.6},
-                    missing_kwds={"color": "#F2F2F3"})  # fmt: skip
+                    missing_kwds={"color": TRACT_FILL})  # fmt: skip
         else:
-            tr.plot(ax=ax, color="#F2F2F3", edgecolor="white", linewidth=0.6)
+            tr.plot(ax=ax, color=TRACT_FILL, edgecolor=TRACT_EDGE, linewidth=0.7)
     ax.set_aspect(1 / np.cos(np.radians(40.44)))
     ax.grid(False)
     ax.set_xlabel("")
