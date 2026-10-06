@@ -1,0 +1,34 @@
+{
+  "records": 1808,
+  "violations": 208,
+  "locations": 744,
+  "missing_insp_date": 1633,
+  "repeat_obs": 1064,
+  "train": 940,
+  "test": 124,
+  "auc": 0.5749421296296298,
+  "top_quintile_rate": 0.2,
+  "test_rate": 0.12903225806451613,
+  "quintile_lift": 1.55,
+  "candidates": 217,
+  "h_diagnostics": {
+    "no_coords": 20,
+    "no_acs_youth": 20,
+    "h_mean": 0.250407980452517,
+    "h_sd": 0.09284980816414444,
+    "p_mean": 0.3207875329995146,
+    "p_sd": 0.158352692586959,
+    "h_p_mean": 0.08491611618818885,
+    "delta_mean": 0.5023041474654378,
+    "corr_h_p": 0.3120691389519711,
+    "sites_within_300m": 124
+  },
+  "p_plus_delta": {
+    "recency_only_B40": 0.2685005153048156,
+    "history_only_B40": 0.22571527593438878
+  },
+  "h_p_plus_delta": {
+    "recency_only_B40": 0.30840944493778705,
+    "history_only_B40": 0.20647948320159623
+  }
+}

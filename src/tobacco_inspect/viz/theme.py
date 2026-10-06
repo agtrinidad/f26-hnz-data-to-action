@@ -9,6 +9,7 @@ from contextvars import ContextVar
 from typing import Any
 
 import matplotlib as mpl
+from matplotlib import patheffects
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 
@@ -67,6 +68,15 @@ def apply_theme(config: Config) -> dict[str, str]:
     return pal
 
 
+def halo_legends(fig: Figure) -> None:
+    """Give every legend label a white outline so it stays legible over bars, lines and tracts."""
+    halo = [patheffects.withStroke(linewidth=3, foreground="white")]
+    legends = [lg for ax in fig.axes if (lg := ax.get_legend()) is not None] + list(fig.legends)
+    for lg in legends:
+        for text in (*lg.get_texts(), lg.get_title()):
+            text.set_path_effects(halo)
+
+
 def new_figure(config: Config, **kw: Any) -> Figure:
     return Figure(figsize=tuple(config.raw["viz"]["figsize"]), **kw)
 
@@ -85,6 +95,7 @@ def titled(fig: Figure, config: Config, title: str, subtitle: str = "", source: 
     )
     if source:
         fig.text(0.04, 0.03, source, fontsize=7.5, color=pal["muted"], va="center")
+    halo_legends(fig)
     with warnings.catch_warnings():  # colorbars on facet grids are not tight_layout-aware
         warnings.simplefilter("ignore", UserWarning)
         fig.tight_layout(

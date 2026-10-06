@@ -1,0 +1,4 @@
+recency_weight,retained_pct,any_prior_violation,median_days_since_check
+0.5,0.8,0.45,1555.5
+1.0,1.0,0.275,1555.5
+2.0,0.975,0.25,1555.5

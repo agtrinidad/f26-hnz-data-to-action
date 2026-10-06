@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from matplotlib.colors import to_rgba
 from matplotlib.lines import Line2D
 
 from tobacco_inspect.eval import geo
@@ -11,9 +12,9 @@ from tobacco_inspect.viz.registry import attach_table, figure
 from tobacco_inspect.viz.theme import new_figure, palette, titled
 
 SRC = "Source: PA Dept. of Revenue licenses (345 retail locations); Census TIGER 2023 tracts; NCES schools."
-# Tract outline is 11.5:1 on white (WCAG AAA); the pale fill keeps >= 4.5:1 against the red (#C41230)
+# Tract outline is #1F3A5F at 0.7 alpha (11.5:1 on white at full opacity, about 4.7:1 as blended); the pale fill keeps >= 4.5:1 against the red (#C41230)
 # and grey (#6B6F76) store dots, which are drawn on top with white edges.
-TRACT_EDGE = "#1F3A5F"
+TRACT_EDGE = to_rgba("#1F3A5F", 0.7)
 TRACT_FILL = "#F2F2F3"
 CLUSTER_PARAMS = {"eps_m": (400, 150, 1000, 50), "min_samples": (4, 2, 10, 1)}
 
