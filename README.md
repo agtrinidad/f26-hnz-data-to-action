@@ -38,12 +38,10 @@ Every result is labeled **observed** (real records), **simulated** (on an assume
 - **A predictable list is a weakness.** If stores react to inspection frequency, repeating the same
   top stores falls below random; rotating with randomness holds at roughly 1.2 to 1.4x random.
   *Simulated.*
-- **Checking every store is affordable but its payoff is unproven.** A census of about 345 city
+- **Checking every store is affordable but payoff requires further research.** A census of about 345 city
   checks adds about $24K to $30K a year over today's program (roughly $330 per added violator found).
   Whether it deters sales depends on an unmeasured response. Break-even tables show what that
   response must be. See the [marginal value memo](docs/process/07_Marginal_Value_and_Framing.md).
-- **What we cannot claim:** that any schedule reduces underage sales (no deterrence data), or
-  Pittsburgh-specific effect sizes (too few violations).
 
 ## Quickstart
 
@@ -118,7 +116,7 @@ small instances; for full-size runs use an academic license (`GRB_LICENSE_FILE`;
 ## AI use
 
 Claude Code (Anthropic) and Gemini assisted with scaffolding, code and drafting. The course's
-GenAI log is in [docs/llm-transcripts/](docs/llm-transcripts/). All numbers are reproducible from
+GenAI log is stored in [docs/llm-transcripts/](docs/llm-transcripts/). All numbers are reproducible from
 the code and were checked by the authors.
 
 ## License
