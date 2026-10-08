@@ -11,10 +11,10 @@ import streamlit as st
 matplotlib.use("Agg")
 
 from tobacco_inspect import viz  # noqa: E402,F401  (populates the registries)
-from tobacco_inspect.viz.ui import builder, gallery  # noqa: E402
+from tobacco_inspect.viz.ui import builder, gallery, report  # noqa: E402
 from tobacco_inspect.viz.ui.common import config_path, get_config, get_data  # noqa: E402
 
-PAGES = {"Gallery": gallery.page, "Builder": builder.page}
+PAGES = {"Gallery": gallery.page, "Report": report.page, "Builder": builder.page}
 
 
 def main() -> None:

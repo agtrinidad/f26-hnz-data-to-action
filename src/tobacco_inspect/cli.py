@@ -38,6 +38,11 @@ def build_parser() -> argparse.ArgumentParser:
             cmd.add_argument(
                 "--spec", nargs="+", help="chart spec JSON file(s) saved from the dashboard Builder"
             )
+            cmd.add_argument(
+                "--report",
+                action="store_true",
+                help="export the final-report figures (config/report_figures.yaml) + captions.md",
+            )
     return parser
 
 
@@ -105,7 +110,13 @@ def main(argv: list[str] | None = None) -> int:
 
         names = args.names.split(",") if args.names else None
         out = Path(args.out) if args.out else None
-        if args.spec:
+        if args.report:
+            from tobacco_inspect.viz import report
+            from tobacco_inspect.viz.data import load_viz_data
+
+            out = out or config.path("figures") / "report"
+            written = report.export_report(load_viz_data(config), config, out, args.transparent)
+        elif args.spec:
             written = pipeline.figures_from_specs(
                 config, [Path(p) for p in args.spec], out, args.transparent
             )

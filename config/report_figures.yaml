@@ -1,0 +1,77 @@
+# Final-report figure manifest, in report order. Edit here or in the dashboard's "Report" tab.
+# `figure` is any name registered in the viz registry (Gallery sections, Builder presets).
+# `status`: ready | rerender (committed PNG predates later code changes) | todo (new this round).
+# Captions and alt text ship with the exported PNGs in captions.md.
+figures:
+  - id: fig1
+    figure: map_observed
+    report_section: Executive summary / Data summary
+    audience: [city council, civilians, product managers]
+    takeaway: More than half of Pittsburgh's tobacco retail locations have never been checked.
+    caption: "Figure 1. Retail locations with and without any prior FDA undercover check (n = 345 locations)."
+    alt: Map of Pittsburgh with red dots for locations with FDA check history and gray dots for locations with none.
+    status: rerender
+  - id: fig2
+    figure: coverage_funnel
+    report_section: Data summary
+    audience: [data scientists, business managers]
+    takeaway: 467 licenses narrow to 345 retail locations, and only 188 retail licenses have any history.
+    caption: "Figure 2. From active licenses to observed retailers."
+    alt: Horizontal bars for 467 active licenses, 392 retail licenses, 345 distinct locations and 188 retail licenses with FDA history.
+    status: rerender
+  - id: fig3
+    figure: checks_by_year
+    report_section: Data summary / Limitations
+    audience: [data scientists, state DOH]
+    takeaway: Enforcement volume is uneven and thin; yearly violation rates rest on small counts and decision-date proxies.
+    caption: "Figure 3. City-limit checks and violation rate by decision year. Rates are not population trends."
+    alt: Bars of checks per year with a line for violation rate, both swinging sharply after 2019.
+    status: rerender
+  - id: fig4
+    figure: backtest_lift
+    report_section: Analysis - risk model and backtest
+    audience: [data scientists, product managers]
+    takeaway: The model ranks better than chance (AUC 0.72), but a prior-violators rule matches it at the very top.
+    caption: "Figure 4. Top-10% lift and overall AUC by scorer, FY2022-25 time-split backtest on statewide checks."
+    alt: Horizontal bars of lift by scorer with 95% intervals; model and prior-violators-first near 1.5x, random near 1.0x.
+    status: rerender
+  - id: fig5
+    figure: simulated_policies_compare
+    report_section: Analysis - simulation
+    audience: [business managers, state DOH, retailers]
+    takeaway: A fixed top-risk list collapses once stores react; randomized rotation keeps about 1.2x random.
+    caption: "Figure 5. Simulated violations found per monthly cycle, with and without retailer response."
+    alt: Grouped horizontal bars for random, fixed top-risk list and rotating partly-random policies, in two retailer-response scenarios.
+    status: todo
+  - id: fig6
+    figure: marginal_value
+    report_section: Recommendations - census-scale
+    audience: [business managers, politicians]
+    takeaway: A one-inspection-per-retailer floor adds roughly $24K a year; an adaptive second pass brings it to about $30K.
+    caption: "Figure 6. Incremental annual cost and cost per added violator for census-scale options."
+    alt: Two bar panels showing incremental cost and cost per incremental violator for the census floor and floor plus second pass.
+    status: rerender
+  - id: fig7
+    figure: regime_frontier
+    report_section: Recommendations
+    audience: [business managers, data scientists]
+    takeaway: Targeting helps below the current check volume; a full sweep finds the most violators.
+    caption: "Figure 7. Expected distinct violators found versus checks per year, by policy."
+    alt: Lines of expected violators against checks per year for random, model-targeted, census floor and census plus second pass policies.
+    status: rerender
+  - id: fig8
+    figure: equity_regimes_race
+    report_section: Recommendations - mitigating disparate impact
+    audience: [civilians, politicians, retailers]
+    takeaway: Compare where checks land with where stores are, by tract demographics, before and after deployment.
+    caption: "Figure 8. Share of expected checks versus share of retailers in majority-minority tracts, by regime."
+    alt: Paired bars comparing retailer share and expected-check share in majority-minority tracts for each policy regime.
+    status: todo
+  - id: fig9
+    figure: map_tract_minority
+    report_section: Recommendations - mitigating disparate impact
+    audience: [civilians, politicians]
+    takeaway: Context for the equity audit - where majority-minority tracts sit relative to the retailer map (a coverage overlay is future work).
+    caption: "Figure 9. Share of residents who are not non-Hispanic White, by census tract (ACS 5-year; wide margins of error)."
+    alt: Choropleth map of Pittsburgh census tracts shaded by minority share, darkest in the east and northeast.
+    status: todo

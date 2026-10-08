@@ -67,12 +67,14 @@ Report figures (styled after the class deck) and the dashboard need the `viz` ex
 uv sync --extra viz
 uv run tobacco-inspect viz                       # all figures -> outputs/figures/*.png
 uv run tobacco-inspect viz --names map_clusters,top_stores --out docs/deliverable/figures
-uv run tobacco-inspect dashboard                 # Streamlit: Gallery + Builder
+uv run tobacco-inspect dashboard                 # Streamlit: Gallery + Report + Builder
 uv run tobacco-inspect viz --spec my_chart.json  # re-render a chart saved from the Builder
+uv run tobacco-inspect viz --report              # final-report figures + captions.md
 ```
 
-The dashboard has two modes. **Gallery** shows the curated figures and presets
-(`config/viz_presets.yaml`). **Builder** constructs a chart from any dataset: bar, line, scatter,
+The dashboard has three modes. **Gallery** shows the curated figures and presets
+(`config/viz_presets.yaml`). **Report** lists the final report's figures in order
+(`config/report_figures.yaml`) with editable text, caption and alt text, and a zip download. **Builder** constructs a chart from any dataset: bar, line, scatter,
 histogram, box, heatmap, concentration curve, map (points, tract choropleth, density), KPI tiles
 or ranked table, with filters, facets, editable text, and PNG, CSV and spec-JSON downloads. Map charts have a zoom slider and a "Center on" tract picker; a sidebar checkbox (or `viz --transparent`) makes exported PNG backgrounds transparent.
 

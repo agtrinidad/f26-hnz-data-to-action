@@ -115,7 +115,10 @@ def backtest_lift(data, config):
     ax = fig.subplots()
     colors = [pal["red"] if s == "model" else pal["muted"] for s in t["scorer"]]
     err = np.array([t["lift"] - t["lift_lo"], t["lift_hi"] - t["lift"]])
-    ax.barh(t["scorer"].str.replace("_", " "), t["lift"], xerr=err, color=colors, height=0.6,
+    labels = [
+        f"{s.replace('_', ' ')} (AUC {a:.2f})" for s, a in zip(t["scorer"], t["auc"], strict=True)
+    ]
+    ax.barh(labels, t["lift"], xerr=err, color=colors, height=0.6,
             error_kw={"ecolor": pal["ink"], "lw": 1})  # fmt: skip
     ax.axvline(1, color=pal["ink"], lw=1, ls="--")
     ax.set_xlabel("Violations found in top 10% vs. random (lift, mean of FY2022-25)")

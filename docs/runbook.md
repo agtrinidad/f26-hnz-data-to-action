@@ -51,7 +51,7 @@ Update the Synar report each spring (new PDF into `data/pdf/`, transcribe tables
 Public Gurobi pip license is size-limited; the code falls back to HiGHS automatically for larger models.
 
 ## Figures and dashboard
-`uv sync --extra viz`, then `uv run tobacco-inspect viz` (PNG to `outputs/figures`) or `uv run tobacco-inspect dashboard`. Re-run `viz` after any pipeline step to refresh report copies in `docs/deliverable/figures`. Map figures need tract polygons from `refresh`; without them they are skipped.
+`uv sync --extra viz`, then `uv run tobacco-inspect viz` (PNG to `outputs/figures`) or `uv run tobacco-inspect dashboard`. Re-run `viz` after any pipeline step to refresh report copies in `docs/deliverable/figures`. Map figures need tract polygons from `refresh`; without them they are skipped. The dashboard's **Report** tab and `viz --report` export the final-report figures listed in `config/report_figures.yaml` (order, captions, alt text); add a figure there by registered name. Plan: `docs/final-report-plan.md`.
 
 ### Extending the chart builder
 Three extension points, each small:

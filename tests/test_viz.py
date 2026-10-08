@@ -98,3 +98,27 @@ def test_text_overrides_apply_and_defaults_survive(cfg, data):
     shown = [t.get_text() for t in custom.texts]
     assert "My title" in shown and default.default_text["title"] not in shown
     assert default.default_text["subtitle"] in shown
+
+
+def test_report_manifest_points_at_registered_figures():
+    from tobacco_inspect.viz.report import load_manifest
+
+    manifest = load_manifest()
+    assert len(manifest) >= 8
+    assert all(m.figure in viz.FIGURES and m.caption and m.alt for m in manifest)
+
+
+def test_report_export_writes_pngs_and_captions(cfg, data, tmp_path):
+    from tobacco_inspect.viz.report import export_report
+
+    written = export_report(data, cfg, tmp_path)
+    assert (tmp_path / "captions.md").exists()
+    assert any(p.suffix == ".png" for p in written)
+
+
+def test_simulated_compare_matches_deck(cfg, data):
+    if data.get("simulation_policies") is None:
+        pytest.skip("simulation output not present")
+    t = registry.table("simulated_policies_compare", data, cfg)
+    fixed = t[t["label"] == "Fixed top-risk list"].set_index("stores")["found_per_cycle"]
+    assert fixed.iloc[0] > 1.5 and fixed.iloc[1] < 0.5

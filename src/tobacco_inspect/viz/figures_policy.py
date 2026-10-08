@@ -203,11 +203,15 @@ def equity_regimes_race(data, config):
 attach_table("equity_regimes_race")(_equity_race)
 
 
+def _strongest_response(s: pd.DataFrame) -> pd.Series:
+    """The (delta, rho) cell where a fixed top-risk list does worst (the strongest response)."""
+    fixed = s[s["policy"] == "prize_topB_fixed"]
+    return fixed.sort_values("found_per_cycle").iloc[0][["delta", "rho"]]
+
+
 def _sim(data, config) -> pd.DataFrame:
     s = data["simulation_policies"]
-    cell = s.sort_values(["delta", "rho"]).iloc[-1][
-        ["delta", "rho"]
-    ]  # strongest simulated response
+    cell = _strongest_response(s)
     s = s[(s["delta"] == cell["delta"]) & (s["rho"] == cell["rho"])]
     return s.sort_values("found_per_cycle")
 
@@ -240,3 +244,63 @@ def simulated_policies(data, config):
 
 
 attach_table("simulated_policies")(_sim)
+
+
+SIM_COMPARE = {
+    "random": "Random",
+    "prize_topB_fixed": "Fixed top-risk list",
+    "thompson_prize+random_at_most_once": "Rotating, partly random (planned)",
+}
+
+
+def _sim_compare(data, config) -> pd.DataFrame:
+    s = data["simulation_policies"]
+    react = _strongest_response(s)
+    keep = s[s["policy"].isin(SIM_COMPARE)]
+    calm = keep[(keep["delta"] == 0) & (keep["rho"] == 0)].assign(stores="Stores don't react")
+    hit = keep[(keep["delta"] == react["delta"]) & (keep["rho"] == react["rho"])].assign(
+        stores=f"Stores react (ρ={react['rho']:g})"
+    )
+    t = pd.concat([calm, hit])
+    t["label"] = t["policy"].map(SIM_COMPARE)
+    return t[["label", "stores", "found_per_cycle", "lo", "hi"]]
+
+
+@figure(
+    "simulated_policies_compare",
+    "Policy",
+    "Simulated policies: stores don't react vs. react",
+    needs=("simulation_policies",),
+)
+def simulated_policies_compare(data, config):
+    pal = palette(config)
+    t = _sim_compare(data, config)
+    fig = new_figure(config)
+    ax = fig.subplots()
+    order = list(SIM_COMPARE.values())
+    arms = list(dict.fromkeys(t["stores"]))
+    w = 0.38
+    for k, (arm, color) in enumerate(zip(arms, (pal["blue"], pal["muted"]), strict=False)):
+        d = t[t["stores"] == arm].set_index("label").loc[order]
+        pos = [i + (k - 0.5) * w for i in range(len(order))]
+        err = [d["found_per_cycle"] - d["lo"], d["hi"] - d["found_per_cycle"]]
+        ax.barh(pos, d["found_per_cycle"], height=w, color=color, xerr=err,
+                error_kw={"ecolor": pal["ink"], "lw": 1, "capsize": 3}, label=arm)  # fmt: skip
+        for y, v, hi in zip(pos, d["found_per_cycle"], d["hi"], strict=True):
+            ax.text(hi + 0.05, y, f"{v:.2f}", va="center", fontsize=10, fontweight="bold")
+    ax.set_yticks(range(len(order)), order)
+    ax.invert_yaxis()
+    ax.axvline(1, color=pal["ink"], lw=1, ls="--")
+    ax.set_xlabel("Violations found per monthly cycle (4 stores); dashed line = random baseline")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="upper right")
+    return titled(
+        fig,
+        config,
+        "Predictable lists fail, while randomized rotation holds up",
+        "Simulated what-if scenarios; a fixed list loses its edge once stores react",
+        SRC,
+    )
+
+
+attach_table("simulated_policies_compare")(_sim_compare)
