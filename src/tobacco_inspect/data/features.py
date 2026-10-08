@@ -113,7 +113,7 @@ def _moe_sum(moes: list[float]) -> float:
 
 
 def parse_acs_tracts(path: Path) -> pd.DataFrame:
-    """Turn the Census Reporter JSON into tract rows with youth, poverty and minority shares + MOE."""
+    """Turn the Census Reporter JSON into tract rows: youth, poverty, minority shares + MOE."""
     blob = json.loads(Path(path).read_text(encoding="utf-8"))
     rows = []
     male_u18 = ["B01001003", "B01001004", "B01001005", "B01001006"]

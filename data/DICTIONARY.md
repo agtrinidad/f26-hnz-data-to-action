@@ -80,4 +80,6 @@ for training and backtesting. Observed, but FDA chose whom to inspect, so they a
 | `valuation_*.csv` | Marginal cost over today's program, break-even tables, what-ifs, robustness and opportunity cost. `valuation_opportunity.csv` carries a `label` column |
 
 Store-level files (`risk_scores`, `schedule_route_sheets`, `why_us`) name licensed businesses taken from
-public records. Scores are a screening aid for prioritizing inspections, not a finding about any business.
+public records. Scores are a screening aid for prioritizing inspections, not a finding about any business:
+they come from an observed, non-random sample of past checks, a high score is not evidence of a violation, and a
+store with no recorded check is not assumed compliant.

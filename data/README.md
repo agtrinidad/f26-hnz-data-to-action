@@ -15,7 +15,7 @@ Fill in retrieval date and file/version as each is pulled. Full URLs: [docs/data
 | Source | Refresh cadence | Retrieved | File / version | Notes |
 |---|---|---|---|---|
 | PA Revenue active cigarette/OTP license list (data.pa.gov `ut72-sft8`) | Daily (licenses expire end of Feb) | 2026-09-30 | `raw/pa_licenses_allegheny_20260930.csv` (1,737 Allegheny rows) | Retailer universe; lat/lon included; `interim/licenses_clean.csv`, `processed/retailer_universe.csv` |
-| FDA Tobacco Compliance Check outcomes | Monthly | export through 2026-07-31 (notebook 01) | `raw/pittsburgh_inspections_cleaned.csv` (original export not in repo) | Inspected stores only: selection bias; database blocks scripted access |
+| FDA Tobacco Compliance Check outcomes | Monthly | export through 2026-07-31 (notebook 01) | `raw/pittsburgh_inspections_cleaned.csv` (original export not in repo; see note below) | Inspected stores only: selection bias; database blocks scripted access |
 | FDA OCE compliance checks, national, FY2011-FY2026 | Monthly | 2026-09-30 | `raw/OCE_FY*.zip` | Same schema as the Pittsburgh export; PA filtered into `interim/oce_pa_by_fiscal_year.csv` and `processed/oce_pa_checks.csv.gz` |
 | FDA Data Dashboard PA exports (compliance actions, inspections, citations, 483s) | Monthly | 2026-09-30 | `raw/fda-pa-*.xlsx` | All product types, no addresses; only tobacco warning letters used (`interim/pa_tobacco_warning_letters_by_year.csv`) |
 | SAMHSA / PA Synar survey | Annual | not pulled | | State-level calibration only; PA 2020 rate 16.1% (unverified) |
@@ -38,3 +38,14 @@ universe), `interim/fda_scope_unknown.csv` (44 locations to place manually).
 `processed/risk_scores.csv` (probability, exposure, prize per license), `processed/oce_pa_checks.csv.gz` (49k PA undercover checks),
 `interim/synar_*.csv` (hand-transcribed Synar tables; check against the PDF in `data/pdf/`), `interim/travel_time_matrix_<hash>.csv.gz`
 (OSM drive times, minutes; one cache file per point set, keyed by hash). Results (git-tracked, small): `outputs/`.
+
+## Provenance of `pittsburgh_inspections_cleaned.csv`
+
+This 1,816-row file is the cleaned output of notebook 01 (`notebooks/01_EDA_Preprocessing.ipynb`) applied to the
+FDA "Tobacco Compliance Outcomes Through 07/31/2026" search export for Pittsburgh-area postal names. The export
+itself is not committed (the FDA site blocks scripted access). It reconciles exactly as a subset of the national
+`OCE_FY*.zip` files, so the same records can be rebuilt from those downloads (memo
+`docs/process/02_Data_Acquisition_Memo.md`, section 12). `tobacco-inspect refresh` reads either the original
+`Pittsburgh Inspections.csv` or this cleaned file (`load_fda_history` in `src/tobacco_inspect/data/geocode.py`) to
+build `interim/fda_locations.csv`; the postal-scope diagnostic (`scripts/diagnostic_postal_scope.py`) also depends on
+the interim output. The committed `interim/` and `processed/` files let the tests and figures run without it.

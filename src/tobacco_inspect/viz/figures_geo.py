@@ -173,7 +173,13 @@ def _tract_density(data, config) -> pd.DataFrame:
     cov = data.get("coverage_by_tract")
     if cov is not None:
         t = t.merge(
-            cov[[c for c in ("tract_geoid", "poverty_rate", "youth_share", "minority_share") if c in cov]],
+            cov[
+                [
+                    c
+                    for c in ("tract_geoid", "poverty_rate", "youth_share", "minority_share")
+                    if c in cov
+                ]
+            ],
             on="tract_geoid",
             how="left",
         )

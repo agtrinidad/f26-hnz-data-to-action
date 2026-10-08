@@ -76,7 +76,7 @@ Still to build if wanted: a Figure 1 coverage-by-tract overlay; a cost table (as
 ## 4. Path to the final report
 
 1. Freeze numbers: `uv run pytest`, `uv run tobacco-inspect run-all`, diff `outputs/` against the deck;
-   update `docs/reconciliation-2026-10-01/REPORT_CLAIM_CROSSWALK.md`.
+   record each claim and its source file in a table in this plan (the earlier crosswalk was removed).
 2. Restructure Analysis: Data, Risk model and backtest, Simulation, Routing, Census-scale cost, Equity,
    Limitations.
 3. Write the missing sections (items 1-2) using the existing role split.
@@ -89,13 +89,13 @@ Still to build if wanted: a Figure 1 coverage-by-tract overlay; a cost table (as
 Already clean: no secrets, no absolute paths, no `.obsidian` tracked, notebooks without outputs, CI
 portability check.
 
-**Needs a team decision**
-- Git author email: 19 commits carry a personal Gmail address. Leave, or rewrite history before anyone
-  else clones.
-- Andrew emails appear in `pyproject.toml` and two draft markdown files.
-- `docs/deliverable/D2A-project-1.pdf` is the course assignment; check redistribution.
-- Internal working docs (`docs/claude-plans/`, `docs/deliverable/claude-drafts/`, the critical-review
-  memo, `docs/reconciliation-2026-10-01/`): move off the public branch or delete.
+**Decisions made (2026-10-08)**
+- Commit email: rewrite the Gmail address on 19 commits to the Andrew address (history rewrite;
+  collaborators must re-clone).
+- Andrew emails in `pyproject.toml` and the human draft: keep.
+- Dropped: course assignment PDF, `docs/claude-plans/`, `docs/reconciliation-2026-10-01/`, the Claude
+  report draft and the marginal-framing insert. Kept: `claude-drafts/10-02-2026-critical-review.md`.
+- Store names and store-level CSVs stay in the repo, with an explicit screening-aid notice.
 
 **Data and legal**
 - Add data terms and attribution (OSM ODbL share-alike, FDA OCE, PA Dept. of Revenue, Census/ACS/TIGER,

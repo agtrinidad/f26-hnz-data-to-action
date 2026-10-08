@@ -130,3 +130,16 @@ Stackelberg security games (lecture notes cited in the project plan): https://we
 | NCES public and private schools | `data/raw/EDGE_GEOCODE_*.zip` | `schools_pgh.csv`, exposure h_i |
 | OpenStreetMap | `data/interim/youth_sites.csv`, drive network cache | exposure h_i, `travel_time_matrix_<hash>.csv.gz` |
 
+## Terms of use and attribution
+
+This is a summary for a class project, not legal advice; check each provider's current terms before reuse.
+
+| Source | Terms to respect | Where it shows up |
+|---|---|---|
+| OpenStreetMap (youth sites, drive network) | Open Database License (ODbL): attribute "(c) OpenStreetMap contributors"; derived databases are share-alike | `data/interim/youth_sites.csv`, `travel_time_matrix_*.csv.gz` |
+| FDA OCE compliance checks and Data Dashboard | U.S. government data; cite the FDA and the retrieval date. FDA states that a store's absence from the data does not mean it is compliant | `data/processed/oce_pa_checks.csv.gz`, `fda_city_checks.csv.gz` |
+| PA Dept. of Revenue licenses (Open Data PA) | Published as open data; check the dataset page for its license and cite the dataset ID `ut72-sft8` | `data/interim/licenses_clean.csv`, `data/processed/retailer_universe.csv` |
+| Census (TIGER, Geocoder, ACS via Census Reporter) | Public U.S. government data; cite the Census Bureau. Census Reporter terms apply to the API extract | `data/interim/acs_tracts.csv`, `data/raw/boundaries/` |
+| NCES EDGE school locations | Public U.S. Department of Education data; cite NCES | `data/interim/schools_pgh.csv` |
+| PA DOH 2025 Synar report | Public state report supplied as a PDF; cite the PA Department of Health | `data/pdf/synar_report_2025.pdf`, `data/interim/synar_*.csv` |
+| This repository's code | MIT license (see `LICENSE`) | whole repository |

@@ -1,6 +1,6 @@
 # Memo 07: Marginal value, break-even deterrence and what-ifs
 
-**Date:** 2026-10-03. **Scope:** City of Pittsburgh limits. **Plan:** [2026-10-03-marginal-value-plan](../claude-plans/2026-10-03-marginal-value-plan.md).
+**Date:** 2026-10-03. **Scope:** City of Pittsburgh limits.
 **Decision record:** [ADR 0008](../adr/0008-marginal-cost-headline.md). **Builds on:** [memo 04](04_Census_Inspection_Scenario.md) (cost), [memo 05](05_Mathematical_Formulation.md), [memo 06](06_Regime_Comparison.md) (regimes).
 **Reproduce:** `uv run tobacco-inspect solve && uv run tobacco-inspect report && uv run tobacco-inspect value` (about 20 seconds for `value`; needs `fit` first).
 Every number below is in `outputs/valuation_*.csv`. Labels: sourced / proxied / assumed / simulated. Nothing here is evidence that deterrence exists.

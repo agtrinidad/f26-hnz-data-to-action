@@ -456,8 +456,9 @@ def equity_compare(cand: pd.DataFrame, universe: pd.DataFrame, counts: dict) -> 
 
     `counts` maps regime name to an array of expected checks per store, aligned to `cand`.
     """
-    acs_cols = [c for c in ("acs_poverty_rate", "acs_youth_share", "acs_minority_share")
-                if c in universe]
+    acs_cols = [
+        c for c in ("acs_poverty_rate", "acs_youth_share", "acs_minority_share") if c in universe
+    ]
     uni = cand[["license_id", "tract_geoid"]].merge(
         universe[["license_id", *acs_cols]], on="license_id", how="left"
     )
