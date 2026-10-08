@@ -1,0 +1,56 @@
+# This CITATION.cff file was generated with Zotero.
+
+cff-version: 1.2.0
+message: >-
+  If you use this dataset, please cite it using the metadata from this file.
+title:  >-
+  CDC/ATSDR Social Vulnerability Index (SVI) 2022
+type: dataset
+url: https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html
+authors: 
+  - family-names: undefined
+date-released: 2022
+
+cff-version: 1.2.0
+message: >-
+  If you use this dataset, please cite it using the metadata from this file.
+title:  >-
+  Public School Locations 2024-25
+type: dataset
+url: https://nces.ed.gov/programs/edge/Geographic/SchoolLocations
+authors: 
+  - family-names: undefined
+date-released: 2025
+
+cff-version: 1.2.0
+message: >-
+  If you use this dataset, please cite it using the metadata from this file.
+title:  >-
+  American Community Survey 5-Year Data (2009-2024)
+type: dataset
+url: https://www.census.gov/data/developers/data-sets/acs-5year.html
+authors: 
+  - family-names: undefined
+date-released: 2024
+
+cff-version: 1.2.0
+message: >-
+  If you use this dataset, please cite it using the metadata from this file.
+title:  >-
+  Tobacco Compliance Check Outcomes
+type: dataset
+url: https://timp-ccid.fda.gov/
+authors: 
+  - family-names: U.S. Food and Drug Administration
+    given-names: Center for Tobacco Products
+date-released: 2024
+
+cff-version: 1.2.0
+message: >-
+  If you use this dataset, please cite it using the metadata from this file.
+title:  >-
+  Tobacco Products Tax Licenses Current Daily County Revenue
+type: dataset
+url: https://data.pa.gov/Licenses-Certificates/Tobacco-Products-Tax-Licenses-Current-Daily-County/ut72-sft8/about_data
+authors: 
+  - family-names: undefined
