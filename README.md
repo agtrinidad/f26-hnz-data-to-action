@@ -11,11 +11,11 @@ inspection schedule within a fixed budget, and prices what it would cost to chec
 Built for CMU Heinz 94-867 *From Data to Action* (Fall 2026) by Abigail Torbatian, Avery Trinidad and
 Anastasia Harouse.
 
-> **Screening aid, not a finding.** Store-level scores and schedules in this repository name licensed
+> Store-level scores and schedules in this repository name licensed
 > businesses taken from public records. They rank stores for inspection priority from an observed,
 > non-random sample of past FDA checks. A high score is not evidence that a business has violated or will
-> violate the law, and a store with no recorded check is not assumed compliant. Do not cite a score as a
-> finding about any business.
+> violate the law, and a store with no recorded check should not be assumed as compliant. Do not cite a score as a
+> finding about any business outside of its use in our routing.
 
 ## The question
 
